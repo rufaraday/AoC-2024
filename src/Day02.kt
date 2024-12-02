@@ -27,102 +27,59 @@ fun main() {
         return count
     }
 
+    fun processReport(report: List<String>): Boolean {
+//        println("-> $report")
+        var safe = true
+        var levelSkipped = false
+        val increase = report[1].toInt() > report[0].toInt()
+        val range = if (increase) -3..-1 else 1..3
+        var i = 0
+        while (i < report.size - 1) {
+            var diff = report[i].toInt() - report[i + 1].toInt()
+//            println("${report[i].toInt()} - ${report[i + 1].toInt()} = $diff")
+
+            if (diff !in range) {
+//                println("not in range")
+                if (levelSkipped) {
+//                    println("we've already skipped")
+                    safe = false
+                    break
+                }
+                if (i < report.size - 2) {
+                    diff = report[i].toInt() - report[i + 2].toInt()
+//                    println("${report[i].toInt()} - ${report[i + 2].toInt()} = $diff")
+                    if (diff !in range) {
+//                        println("skip next does not help")
+                        safe = false
+                        break
+                    } else {
+//                        println("next helped")
+                        levelSkipped = true
+                        safe = true
+                        i++
+                    }
+                } else {
+//                    // skip last as we still can
+////                    println("skipping last")
+//                    safe = true
+//                    levelSkipped = true
+                }
+            }
+            i++
+        }
+//        println("safe $safe")
+        return safe
+    }
+
     fun part2(input: List<String>): Int {
 
         // The levels are either all increasing or all decreasing.
         // Any two adjacent levels differ by at least one and at most three.
         var count = 0
         input.forEach() {
-            println("-> $it")
-            var safe = true
-            var reportSkipped = false
-            val reports = it.split(" ")
-            val increase = reports[1].toInt() > reports[0].toInt()
-            for (i in 1..<reports.size) {
-                val diff = reports[i].toInt() - reports[i - 1].toInt()
-                println("${reports[i].toInt()} - ${reports[i - 1].toInt()} = $diff")
-                if (increase) {
-                    if (diff !in 1..3) {
-                        println("not in range")
-                        safe = false
-                        if (reportSkipped) {
-                            println("we've already skipped")
-                            safe = false
-                            break
-                        }
-                        if (i > 1) {
-                            if (reports[i].toInt() - reports[i - 2].toInt() !in 1..3) {
-                                println("${reports[i].toInt()} - ${reports[i - 2].toInt()}")
-                                println("skip previous does not help")
-                                safe = false
-                            } else {
-                                println("previous helped")
-                                safe = true
-                                reportSkipped = true
-                                continue
-                            }
-                        }
-                        if (i < reports.size - 1) {
-                            if (reports[i + 1].toInt() - reports[i - 1].toInt() !in 1..3) {
-                                println("${reports[i + 1].toInt()} - ${reports[i - 1].toInt()}")
-                                println("skip next does not help")
-                                safe = false
-                            } else {
-                                println("next helped")
-                                safe = true
-                                continue
-                            }
-                        } else {
-                            // skip last as we still can
-                            println("skipping last")
-                            safe = true
-                            reportSkipped = true
-                            continue
-                        }
-                    }
-                } else {
-                    if (diff !in -3..-1) {
-                        println("not in range")
-                        safe = false
-                        if (reportSkipped) {
-                            println("we've already skipped")
-                            safe = false
-                            break
-                        }
-                        if (i > 1) {
-                            if (reports[i].toInt() - reports[i - 2].toInt() !in -3..-1) {
-                                println("${reports[i].toInt()} - ${reports[i - 2].toInt()}")
-                                println("skip previous does not help")
-                                safe = false
-                            } else {
-                                println("previous helped")
-                                safe = true
-                                reportSkipped = true
-                                continue
-                            }
-                        } // TODO else try to skip first
-                        if (i < reports.size - 1) {
-                            if (reports[i + 1].toInt() - reports[i - 1].toInt() !in -3..-1) {
-                                println("${reports[i + 1].toInt()} - ${reports[i - 1].toInt()}")
-                                println("skip next does not help")
-                                safe = false
-                            } else {
-                                println("next helped")
-                                safe = true
-                                continue
-                            }
-                        } else {
-                            // skip last as we still can
-                            println("skipping last")
-                            safe = true
-                            reportSkipped = true
-                            continue
-                        }
-                    }
-                }
-            }
-//            println("safe $safe")
-            if (safe) count++
+            val report = it.split(" ")
+            if (processReport(report)) count++
+            else if (processReport(report.reversed())) count++
             else println(it)
         }
         println(input.size)
@@ -134,16 +91,16 @@ fun main() {
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day02_test")
-    println("PART1 test")
-    check(part1(testInput) == 2)
-    println("PART2 test")
-    check(part2(testInput) == 4)
-    println("PART2 custom check")
-    check(part2(listOf("41 42 45 47 48 49 53 51")) == 1)
-    check(part2(listOf("37 40 42 43 44 47 51")) == 1)
+//    println("PART1 test")
+//    check(part1(testInput) == 2)
+//    println("PART2 test")
+//    check(part2(testInput) == 4)
+//    println("PART2 custom check")
+//    check(part2(listOf("41 42 45 47 48 49 53 51")) == 1)
+//    check(part2(listOf("37 40 42 43 44 47 51")) == 1)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day02")
-    part1(input).println()
+//    part1(input).println()
     part2(input).println()
 }
