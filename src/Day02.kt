@@ -35,6 +35,7 @@ fun main() {
         input.forEach() {
 //            println(it)
             var safe = true
+            var reportSkipped = false
             val reports = it.split(" ")
             val increase = reports[1].toInt() > reports[0].toInt()
             for (i in 1..<reports.size) {
@@ -43,25 +44,34 @@ fun main() {
                 if (increase) {
                     if (diff !in 1..3) {
                         println("not in range")
-                        if (reports[i].toInt() - reports[i - 2].toInt() !in 1..3) {
-                            println("${reports[i].toInt()} - ${reports[i - 2].toInt()}")
-                            println("skip one does not help - no break yet")
+                        safe = false
+                        if (reportSkipped) {
+                            println("we've already skipped")
                             safe = false
-
-                            println("checking further")
-                            if (i == reports.size - 1) {
-                                println("last - break")
+                            break
+                        }
+                        if (i > 1) {
+                            if (reports[i].toInt() - reports[i - 2].toInt() !in 1..3) {
+                                println("${reports[i].toInt()} - ${reports[i - 2].toInt()}")
+                                println("skip previous does not help")
                                 safe = false
-                                break
+                            } else {
+                                println("previous helped")
+                                safe = true
+                                reportSkipped = true
+                                continue
                             }
+                        }
+                        if (i < reports.size) {
                             if (reports[i + 1].toInt() - reports[i - 1].toInt() !in 1..3) {
                                 println("${reports[i + 1].toInt()} - ${reports[i - 1].toInt()}")
-                                println("skip one does not help - break")
+                                println("skip next does not help")
                                 safe = false
-                                break
+                            } else {
+                                println("next helped")
+                                safe = true
+                                continue
                             }
-                            println("next helped")
-                            safe = true
                         }
                     }
                 } else {
