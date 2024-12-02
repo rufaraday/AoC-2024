@@ -58,11 +58,6 @@ fun main() {
                         safe = true
                         i++
                     }
-                } else {
-//                    // skip last as we still can
-////                    println("skipping last")
-//                    safe = true
-//                    levelSkipped = true
                 }
             }
             i++
@@ -91,16 +86,16 @@ fun main() {
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day02_test")
-//    println("PART1 test")
-//    check(part1(testInput) == 2)
-//    println("PART2 test")
-//    check(part2(testInput) == 4)
-//    println("PART2 custom check")
-//    check(part2(listOf("41 42 45 47 48 49 53 51")) == 1)
-//    check(part2(listOf("37 40 42 43 44 47 51")) == 1)
+    println("PART1 test")
+    check(part1(testInput) == 2)
+    println("PART2 test")
+    check(part2(testInput) == 4)
+    println("PART2 custom check")
+    check(part2(listOf("41 42 45 47 48 49 53 51")) == 1)
+    check(part2(listOf("37 40 42 43 44 47 51")) == 1)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day02")
-//    part1(input).println()
+    part1(input).println()
     part2(input).println()
 }
