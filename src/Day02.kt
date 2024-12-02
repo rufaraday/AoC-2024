@@ -33,7 +33,7 @@ fun main() {
         // Any two adjacent levels differ by at least one and at most three.
         var count = 0
         input.forEach() {
-//            println(it)
+            println("-> $it")
             var safe = true
             var reportSkipped = false
             val reports = it.split(" ")
@@ -62,7 +62,7 @@ fun main() {
                                 continue
                             }
                         }
-                        if (i < reports.size) {
+                        if (i < reports.size - 1) {
                             if (reports[i + 1].toInt() - reports[i - 1].toInt() !in 1..3) {
                                 println("${reports[i + 1].toInt()} - ${reports[i - 1].toInt()}")
                                 println("skip next does not help")
@@ -72,17 +72,51 @@ fun main() {
                                 safe = true
                                 continue
                             }
+                        } else {
+                            // skip last as we still can
+                            println("skipping last")
+                            safe = true
+                            reportSkipped = true
+                            continue
                         }
                     }
                 } else {
                     if (diff !in -3..-1) {
-                        if (i == reports.size - 1) {
+                        println("not in range")
+                        safe = false
+                        if (reportSkipped) {
+                            println("we've already skipped")
                             safe = false
                             break
                         }
-                        if (reports[i + 1].toInt() - reports[i - 1].toInt() !in -3..-1) {
-                            safe = false
-                            break
+                        if (i > 1) {
+                            if (reports[i].toInt() - reports[i - 2].toInt() !in -3..-1) {
+                                println("${reports[i].toInt()} - ${reports[i - 2].toInt()}")
+                                println("skip previous does not help")
+                                safe = false
+                            } else {
+                                println("previous helped")
+                                safe = true
+                                reportSkipped = true
+                                continue
+                            }
+                        } // TODO else try to skip first
+                        if (i < reports.size - 1) {
+                            if (reports[i + 1].toInt() - reports[i - 1].toInt() !in -3..-1) {
+                                println("${reports[i + 1].toInt()} - ${reports[i - 1].toInt()}")
+                                println("skip next does not help")
+                                safe = false
+                            } else {
+                                println("next helped")
+                                safe = true
+                                continue
+                            }
+                        } else {
+                            // skip last as we still can
+                            println("skipping last")
+                            safe = true
+                            reportSkipped = true
+                            continue
                         }
                     }
                 }
@@ -106,6 +140,7 @@ fun main() {
     check(part2(testInput) == 4)
     println("PART2 custom check")
     check(part2(listOf("41 42 45 47 48 49 53 51")) == 1)
+    check(part2(listOf("37 40 42 43 44 47 51")) == 1)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day02")
