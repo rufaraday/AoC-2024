@@ -4,6 +4,14 @@ import kotlin.io.path.Path
 import kotlin.io.path.readText
 
 /**
+ * Prepare next day
+ * 1. copy initial file
+ *     git show 2fba95d80bca71e85f5adb8d23f1ae09d06fed01:src/Day01.kt > src/DayXX.kt
+ * 2. change input file to DayXX:
+ *     val input = readInput("DayXX")
+ */
+
+/**
  * Reads lines from the given input txt file.
  */
 fun readInput(name: String) = Path("src/$name.txt").readText().trim().lines()
