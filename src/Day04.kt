@@ -1,29 +1,12 @@
+import kotlin.math.sin
+
 fun main() {
-    fun checkLetter(letter: Char, word: String, array: Array<Boolean>): Int {
-        println("~~$letter, $array")
-        var i = 0
-        while (i < word.length) {
-            if (!array.elementAt(i)) {
-                if (word.elementAt(i) == letter) {
-                    array[i] = true
-                } else {
-                    break
-                }
-            }
-            i++
-        }
-        if (i == word.length) {
-            // clean array
-            for (j in array.indices)
-            array[j] = false
-        }
-        return i
-    }
 
     fun part1(input: List<String>): Int {
         var count = 0
         val columns = input.first().length
         val rows = input.size
+        println("$input.size = $rows")
         /* direction:
         - 1. horizontal: XMAS
         - 2. horizontal reverse: SMAX
@@ -35,21 +18,33 @@ fun main() {
         - 8. vertical reverse
          */
         val word = "XMAS"
-        var horizontal = arrayOf(false, false, false, false)
-        var horizontalReverse = arrayOf(false, false, false, false)
+        var horizontal = 0
+        var horizontalReverse = 0
         var x = 0
         var y = 0
-        while (x < columns - 1) {
-            if (checkLetter(input.elementAt(y).elementAt(x), word, horizontal) == 4) {
-                println("horizontal mach ends at $x, $y")
-                count++
+        while (y < rows) {
+            while (x < columns) {
+                println("letter ${input.elementAt(y).elementAt(x)} at ($x, $y), looking for word[$horizontal] = ${word[horizontal]}")
+                if (input.elementAt(y).elementAt(x) != word[horizontal]) {
+                    println("zeroing")
+                    horizontal = 0
+                }
+                println("letter ${input.elementAt(y).elementAt(x)} at ($x, $y), looking for word[$horizontal] = ${word[horizontal]}")
+                if (input.elementAt(y).elementAt(x) == word[horizontal]) {
+                    horizontal++
+                    println("got letter no $horizontal at ($x, $y)")
+                    if (horizontal == word.length) {
+                        println("horizontal mach ends at ($x, $y)")
+                        count++
+                        horizontal = 0
+                    }
+                }
+                x++
             }
-            while (y < rows - 1) {
-                // do check
-                y++
-            }
-            x++
+            x = 0
+            y++
         }
+        println("found $count matches")
         return count
     }
 
