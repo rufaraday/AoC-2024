@@ -1,5 +1,3 @@
-import kotlin.math.sin
-
 fun main() {
 
     fun findWord(input: List<String>, word: String, x: Int, y: Int, stepX: Int, stepY: Int): Boolean {
@@ -73,7 +71,55 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        var count = 0
+        val columns = input.first().length
+        val rows = input.size
+        println("$input.size = $rows")
+        var x = 0
+        var y = 0
+        while (y < rows) {
+            while (x < columns) {
+                if (input.elementAt(y).elementAt(x) == 'A') {
+                    // find "x" surrounding 4 letters
+                    // find "+" surrounding 4 letters
+                    // see if there are 2 'M' and 2 'S' in surrounding
+                    // ignore out of bound exception as previously
+                    try {
+                        val surrounding = arrayOf(
+                            input.elementAt(y + 1).elementAt(x + 1),
+                            input.elementAt(y - 1).elementAt(x + 1),
+                            input.elementAt(y + 1).elementAt(x - 1),
+                            input.elementAt(y - 1).elementAt(x - 1)
+                        )
+                        println("${surrounding.joinToString()}: ${surrounding.sortedArray().joinToString()}")
+                        if (surrounding.sortedArray().joinToString() == "M, M, S, S") {
+                            count++
+                        }
+                    } catch (e: java.lang.IndexOutOfBoundsException) {
+                        // do nothing
+                    }
+                    try {
+                        val surrounding = arrayOf(
+                            input.elementAt(y + 1).elementAt(x),
+                            input.elementAt(y - 1).elementAt(x),
+                            input.elementAt(y).elementAt(x + 1),
+                            input.elementAt(y).elementAt(x - 1)
+                        )
+                        println("${surrounding.joinToString()}: ${surrounding.sort()}")
+                        if (surrounding.sortedArray().joinToString() == "M, M, S, S") {
+                            count++
+                        }
+                    } catch (e: java.lang.IndexOutOfBoundsException) {
+                        // do nothing
+                    }
+                }
+                x++
+            }
+            x = 0
+            y++
+        }
+        println("found $count matches")
+        return count
     }
 
     // Test if implementation meets criteria from the description, like:
