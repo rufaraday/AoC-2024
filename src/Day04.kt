@@ -17,7 +17,7 @@ fun main() {
         var count = 0
         val columns = input.first().length
         val rows = input.size
-        println("$input.size = $rows")
+//        println("$input.size = $rows")
         /* direction:
         - 1. horizontal: XMAS
         - 2. horizontal reverse: SMAX
@@ -66,7 +66,7 @@ fun main() {
             x = 0
             y++
         }
-        println("found $count matches")
+//        println("found $count matches")
         return count
     }
 
@@ -74,7 +74,7 @@ fun main() {
         var count = 0
         val columns = input.first().length
         val rows = input.size
-        println("$input.size = $rows")
+//        println("$input.size = $rows")
         var x = 0
         var y = 0
         while (y < rows) {
@@ -91,40 +91,40 @@ fun main() {
                             input.elementAt(y + 1).elementAt(x - 1),
                             input.elementAt(y - 1).elementAt(x - 1)
                         )
-                        print("${surrounding.joinToString()}: ${surrounding.sortedArray().joinToString()}")
+//                        print("${surrounding.joinToString()}: ${surrounding.sortedArray().joinToString()}")
                         if (surrounding.sortedArray().joinToString() == "M, M, S, S") {
-                            println(" ook")
+//                            println(" ook")
                             count++
                         } else {
-                            println(" nok")
+//                            println(" nok")
                         }
                     } catch (e: java.lang.IndexOutOfBoundsException) {
                         // do nothing
                     }
-                    try {
-                        val surrounding = arrayOf(
-                            input.elementAt(y + 1).elementAt(x),
-                            input.elementAt(y - 1).elementAt(x),
-                            input.elementAt(y).elementAt(x + 1),
-                            input.elementAt(y).elementAt(x - 1)
-                        )
-                        print("${surrounding.joinToString()}: ${surrounding.sortedArray().joinToString()}")
-                        if (surrounding.sortedArray().joinToString() == "M, M, S, S") {
-                            println(" ook")
-                            count++
-                        } else {
-                            println(" nok")
-                        }
-                    } catch (e: java.lang.IndexOutOfBoundsException) {
-                        // do nothing
-                    }
+//                    try {
+//                        val surrounding = arrayOf(
+//                            input.elementAt(y + 1).elementAt(x),
+//                            input.elementAt(y - 1).elementAt(x),
+//                            input.elementAt(y).elementAt(x + 1),
+//                            input.elementAt(y).elementAt(x - 1)
+//                        )
+////                        print("${surrounding.joinToString()}: ${surrounding.sortedArray().joinToString()}")
+//                        if (surrounding.sortedArray().joinToString() == "M, M, S, S") {
+////                            println(" ook")
+//                            count++
+//                        } else {
+////                            println(" nok")
+//                        }
+//                    } catch (e: java.lang.IndexOutOfBoundsException) {
+//                        // do nothing
+//                    }
                 }
                 x++
             }
             x = 0
             y++
         }
-        println("found $count matches")
+//        println("found $count matches")
         return count
     }
 
@@ -135,6 +135,7 @@ fun main() {
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day04_test")
     check(part1(testInput) == 18)
+    check(part2(testInput) == 9)
 
     println("input data")
     // Read the input from the `src/Day01.txt` file.
