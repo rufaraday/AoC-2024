@@ -2,6 +2,24 @@ import kotlin.math.sin
 
 fun main() {
 
+    fun checkLetter(letter: Char, word: String, horizontal: Int, count: Int): Pair<Int, Int> {
+        var horizontal1 = horizontal
+        var count1 = count
+        if (letter != word[horizontal1]) {
+            // zeroing
+            horizontal1 = 0
+        }
+        if (letter == word[horizontal1]) {
+            horizontal1++
+            if (horizontal1 == word.length) {
+                // horizontal reaches end
+                count1++
+                horizontal1 = 0
+            }
+        }
+        return Pair(count1, horizontal1)
+    }
+
     fun part1(input: List<String>): Int {
         var count = 0
         val columns = input.first().length
@@ -24,25 +42,31 @@ fun main() {
         var y = 0
         while (y < rows) {
             while (x < columns) {
-                println("letter ${input.elementAt(y).elementAt(x)} at ($x, $y), looking for word[$horizontal] = ${word[horizontal]}")
-                if (input.elementAt(y).elementAt(x) != word[horizontal]) {
-                    println("zeroing")
-                    horizontal = 0
-                }
-                println("letter ${input.elementAt(y).elementAt(x)} at ($x, $y), looking for word[$horizontal] = ${word[horizontal]}")
-                if (input.elementAt(y).elementAt(x) == word[horizontal]) {
-                    horizontal++
-                    println("got letter no $horizontal at ($x, $y)")
-                    if (horizontal == word.length) {
-                        println("horizontal mach ends at ($x, $y)")
-                        count++
-                        horizontal = 0
-                    }
-                }
+                val (c, h) = checkLetter(input.elementAt(y).elementAt(x), word, horizontal, count)
+                count = c
+                horizontal = h
+                val (cr, hr) = checkLetter(input.elementAt(y).elementAt(columns - x - 1), word, horizontalReverse, count)
+                count = cr
+                horizontalReverse = hr
                 x++
             }
             x = 0
             y++
+        }
+        x = 0; y = 0
+        horizontal = 0; horizontalReverse = 0
+        while (x < columns) {
+            while (y < rows) {
+                val (c, h) = checkLetter(input.elementAt(y).elementAt(x), word, horizontal, count)
+                count = c
+                horizontal = h
+                val (cr, hr) = checkLetter(input.elementAt(rows - y - 1).elementAt(x), word, horizontalReverse, count)
+                count = cr
+                horizontalReverse = hr
+                y++
+            }
+            y = 0
+            x++
         }
         println("found $count matches")
         return count
