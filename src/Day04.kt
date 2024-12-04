@@ -91,9 +91,12 @@ fun main() {
                             input.elementAt(y + 1).elementAt(x - 1),
                             input.elementAt(y - 1).elementAt(x - 1)
                         )
-                        println("${surrounding.joinToString()}: ${surrounding.sortedArray().joinToString()}")
+                        print("${surrounding.joinToString()}: ${surrounding.sortedArray().joinToString()}")
                         if (surrounding.sortedArray().joinToString() == "M, M, S, S") {
+                            println(" ook")
                             count++
+                        } else {
+                            println(" nok")
                         }
                     } catch (e: java.lang.IndexOutOfBoundsException) {
                         // do nothing
@@ -105,9 +108,12 @@ fun main() {
                             input.elementAt(y).elementAt(x + 1),
                             input.elementAt(y).elementAt(x - 1)
                         )
-                        println("${surrounding.joinToString()}: ${surrounding.sort()}")
+                        print("${surrounding.joinToString()}: ${surrounding.sortedArray().joinToString()}")
                         if (surrounding.sortedArray().joinToString() == "M, M, S, S") {
+                            println(" ook")
                             count++
+                        } else {
+                            println(" nok")
                         }
                     } catch (e: java.lang.IndexOutOfBoundsException) {
                         // do nothing
