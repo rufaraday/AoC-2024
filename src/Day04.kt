@@ -2,22 +2,17 @@ import kotlin.math.sin
 
 fun main() {
 
-    fun checkLetter(letter: Char, word: String, horizontal: Int, count: Int): Pair<Int, Int> {
-        var horizontal1 = horizontal
-        var count1 = count
-        if (letter != word[horizontal1]) {
-            // zeroing
-            horizontal1 = 0
-        }
-        if (letter == word[horizontal1]) {
-            horizontal1++
-            if (horizontal1 == word.length) {
-                // horizontal reaches end
-                count1++
-                horizontal1 = 0
+    fun findWord(input: List<String>, word: String, x: Int, y: Int, stepX: Int, stepY: Int): Boolean {
+        try {
+            for (i in 1..<word.length) {
+                if (word[i] != input.elementAt(y + i * stepY).elementAt(x + i * stepX)) {
+                    return false
+                }
             }
+            return true
+        } catch (e: java.lang.IndexOutOfBoundsException) {
+            return false
         }
-        return Pair(count1, horizontal1)
     }
 
     fun part1(input: List<String>): Int {
@@ -32,41 +27,46 @@ fun main() {
         - 4. r. diagonal reverse
         - 5. l. diagonal
         - 6. l. diagonal reverse
-        - 7.  vertical
+        - 7. vertical
         - 8. vertical reverse
          */
         val word = "XMAS"
-        var horizontal = 0
-        var horizontalReverse = 0
         var x = 0
         var y = 0
         while (y < rows) {
             while (x < columns) {
-                val (c, h) = checkLetter(input.elementAt(y).elementAt(x), word, horizontal, count)
-                count = c
-                horizontal = h
-                val (cr, hr) = checkLetter(input.elementAt(y).elementAt(columns - x - 1), word, horizontalReverse, count)
-                count = cr
-                horizontalReverse = hr
+                if (input.elementAt(y).elementAt(x) == 'X') {
+                    // search in all directions
+                    // ignore direction in case of out of bounds exception
+                    if (findWord(input, word, x, y, 1, 1)) {
+                        count++
+                    }
+                    if (findWord(input, word, x, y, 1, 0)) {
+                        count++
+                    }
+                    if (findWord(input, word, x, y, 0, 1)) {
+                        count++
+                    }
+                    if (findWord(input, word, x, y, -1, -1)) {
+                        count++
+                    }
+                    if (findWord(input, word, x, y, -1, 0)) {
+                        count++
+                    }
+                    if (findWord(input, word, x, y, 0, -1)) {
+                        count++
+                    }
+                    if (findWord(input, word, x, y, 1, -1)) {
+                        count++
+                    }
+                    if (findWord(input, word, x, y, -1, 1)) {
+                        count++
+                    }
+                }
                 x++
             }
             x = 0
             y++
-        }
-        x = 0; y = 0
-        horizontal = 0; horizontalReverse = 0
-        while (x < columns) {
-            while (y < rows) {
-                val (c, h) = checkLetter(input.elementAt(y).elementAt(x), word, horizontal, count)
-                count = c
-                horizontal = h
-                val (cr, hr) = checkLetter(input.elementAt(rows - y - 1).elementAt(x), word, horizontalReverse, count)
-                count = cr
-                horizontalReverse = hr
-                y++
-            }
-            y = 0
-            x++
         }
         println("found $count matches")
         return count
