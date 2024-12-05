@@ -1,6 +1,29 @@
 import java.util.Collections
 
 fun main() {
+    fun isValid(
+        update: List<Int>,
+        ordering: MutableList<String>
+    ): Boolean {
+        var valid = true
+        var i = 0;
+        var j: Int
+        while (i < update.lastIndex && valid) {
+            j = i + 1
+            while (j <= update.lastIndex && valid) {
+                val validator = update[j].toString().plus("|").plus(update[i])
+    //                    println("checking \"$validator\"")
+                if (ordering.contains(validator)) {
+                    println("invalid $validator")
+                    valid = false
+                }
+                j++
+            }
+            i++
+        }
+        return valid
+    }
+
     fun part1(input: List<String>): Int {
         var acc = 0
 
@@ -25,23 +48,8 @@ fun main() {
         // find if any rule is violated
         updates.forEach() {
             println(it)
-            var invalid = false
-            var i = 0; var j = 1
             val update = it.split(",").map { it.toInt() }
-            while (i < update.lastIndex && !invalid) {
-                j = i + 1
-                while (j <= update.lastIndex && !invalid) {
-                    val validator = update[j].toString().plus("|").plus(update[i])
-                    println("checking \"$validator\"")
-                    if (ordering.contains(validator)) {
-                        println("invalid")
-                        invalid = true
-                    }
-                    j++
-                }
-                i++
-            }
-            if (!invalid) {
+            if (isValid(update, ordering)) {
 //                println(update[update.lastIndex / 2])
                 acc += update[update.lastIndex / 2]
             }
@@ -83,9 +91,9 @@ fun main() {
                 j = i + 1
                 while (j <= update.lastIndex) {
                     val validator = update[j].toString().plus("|").plus(update[i])
-                    println("checking \"$validator\"")
+//                    println("checking \"$validator\"")
                     if (ordering.contains(validator)) {
-                        println("invalid")
+//                        println("invalid")
                         invalid = true
                         instructions.add(update[j] to update[i])
                     }
@@ -94,7 +102,7 @@ fun main() {
                 i++
             }
             if (invalid) {
-                var ordered = it.split(",").map { it.toInt() }.toMutableList()
+                var ordered = update.toMutableList()
                 ordered.println()
                 instructions.forEach() {instruction ->
                     println("swap instruction $instruction")
@@ -105,6 +113,11 @@ fun main() {
                 }
 
                 println("invalid $update -> $ordered")
+
+                println("validation: ${isValid(ordered, ordering)}")
+//                assert(isValid(ordered, ordering))
+                if (!isValid(ordered, ordering))
+                    throw RuntimeException()
 
                 // add middle element to accumulator
                 acc += ordered[ordered.lastIndex / 2]
@@ -117,20 +130,25 @@ fun main() {
     // Test if implementation meets criteria from the description, like:
 //    check(part1(listOf("test_input")) == 1)
 
-    println("part2 test test")
+    val checkInput = readInput("Day05_check")
+//    part1(checkInput)
+    part2(checkInput)
+
+//    println("part2 test test")
     val testTestInput = readInput("Day05_testtest")
-    part2(testTestInput)
-
-    println("test")
-    // Or read a large test input from the `src/Day01_test.txt` file:
+//    part2(testTestInput)
+//
+//    println("test")
+//    // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day05_test")
-    check(part1(testInput) == 143)
-    println("part2 test")
-    check(part2(testInput) == 123)
-
-    println("real deal")
-    // Read the input from the `src/Day01.txt` file.
+//    check(part1(testInput) == 143)
+//    println("part2 test")
+//    check(part2(testInput) == 123)
+//
+//    // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day05")
-    part1(input).println()
-    part2(input).println()
+//    println("real deal part 1")
+//    part1(input).println()
+//    println("real deal part 2")
+//    part2(input).println()
 }
