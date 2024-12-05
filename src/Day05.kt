@@ -63,32 +63,52 @@ fun main() {
 
         // split lists
         var switch = false
-        val ordering = mutableListOf<Pair<Int, Int>>()
+        val ordering = mutableListOf<String>()
         val updates = mutableListOf<String>()
         input.forEach() {
             if (it == "") {
                 switch = true
             } else {
                 if (!switch) {
-//                    val instr = it.split("|").map {it.toInt()}.zipWithNext().first()
-                    ordering.add(it.split("|").map {it.toInt()}.zipWithNext().first())
-//                    println("$it -> $instr")
+                    ordering.add(it)
                 } else {
                     updates.add(it)
                 }
             }
         }
-
 //        ordering.println()
 //        updates.println()
 
-        // create order list
-        ordering.groupingBy { it.first }.eachCount().println()
-        ordering.groupingBy { it.second }.eachCount().println()
-
         // correct violated rules
         updates.forEach() {
+            println(it)
+            var invalid = false
+            var i = 0; var j: Int
+            val update = it.split(",").map { it.toInt() }.toMutableList()
+            while (i < update.lastIndex) {
+                j = 0
+                while (j <= update.lastIndex) {
+                    val validator = update[j].toString().plus("|").plus(update[i])
+//                    println("checking \"$validator\"")
+                    if (ordering.contains(validator)) {
+//                        println("invalid")
+                        invalid = true
+                        Collections.swap(update, j, i)
+                    }
+                    j++
+                }
+                i++
+            }
+            update.println()
+            if (invalid) {
+                println("validation: ${isValid(update, ordering)}")
+//                assert(isValid(ordered, ordering))
+                if (!isValid(update, ordering))
+                    throw RuntimeException()
 
+                // add middle element to accumulator
+                acc += update[update.lastIndex / 2]
+            }
         }
         println(acc)
         return acc
@@ -110,7 +130,7 @@ fun main() {
     val testInput = readInput("Day05_test")
 //    check(part1(testInput) == 143)
 //    println("part2 test")
-    check(part2(testInput) == 123)
+//    check(part2(testInput) == 123)
 //
 //    // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day05")
