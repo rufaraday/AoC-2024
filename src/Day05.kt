@@ -63,65 +63,32 @@ fun main() {
 
         // split lists
         var switch = false
-        val ordering = mutableListOf<String>()
+        val ordering = mutableListOf<Pair<Int, Int>>()
         val updates = mutableListOf<String>()
         input.forEach() {
             if (it == "") {
                 switch = true
             } else {
                 if (!switch) {
-                    ordering.add(it)
+//                    val instr = it.split("|").map {it.toInt()}.zipWithNext().first()
+                    ordering.add(it.split("|").map {it.toInt()}.zipWithNext().first())
+//                    println("$it -> $instr")
                 } else {
                     updates.add(it)
                 }
             }
         }
+
 //        ordering.println()
 //        updates.println()
 
+        // create order list
+        ordering.groupingBy { it.first }.eachCount().println()
+        ordering.groupingBy { it.second }.eachCount().println()
+
         // correct violated rules
-        var instructions : MutableList<Pair<Int, Int>>
         updates.forEach() {
-            instructions = emptyList<Pair<Int, Int>>().toMutableList()
-            println(it)
-            var invalid = false
-            var i = 0; var j: Int
-            val update = it.split(",").map { it.toInt() }
-            while (i < update.lastIndex) {
-                j = i + 1
-                while (j <= update.lastIndex) {
-                    val validator = update[j].toString().plus("|").plus(update[i])
-//                    println("checking \"$validator\"")
-                    if (ordering.contains(validator)) {
-//                        println("invalid")
-                        invalid = true
-                        instructions.add(update[j] to update[i])
-                    }
-                    j++
-                }
-                i++
-            }
-            if (invalid) {
-                var ordered = update.toMutableList()
-                ordered.println()
-                instructions.forEach() {instruction ->
-                    println("swap instruction $instruction")
-                    println("index of ${instruction.first}: ${ordered.indexOf(instruction.first)}")
-                    println("index of ${instruction.second}: ${ordered.indexOf(instruction.second)}")
-                    Collections.swap(ordered, ordered.indexOf(instruction.first), ordered.indexOf(instruction.second))
-                    println(ordered)
-                }
 
-                println("invalid $update -> $ordered")
-
-                println("validation: ${isValid(ordered, ordering)}")
-//                assert(isValid(ordered, ordering))
-                if (!isValid(ordered, ordering))
-                    throw RuntimeException()
-
-                // add middle element to accumulator
-                acc += ordered[ordered.lastIndex / 2]
-            }
         }
         println(acc)
         return acc
@@ -143,7 +110,7 @@ fun main() {
     val testInput = readInput("Day05_test")
 //    check(part1(testInput) == 143)
 //    println("part2 test")
-//    check(part2(testInput) == 123)
+    check(part2(testInput) == 123)
 //
 //    // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day05")
