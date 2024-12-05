@@ -87,13 +87,13 @@ fun main() {
             val update = it.split(",").map { it.toInt() }.toMutableList()
             while (i < update.lastIndex) {
                 j = 0
-                while (j <= update.lastIndex) {
-                    val validator = update[j].toString().plus("|").plus(update[i])
+                while (j <= update.lastIndex - i - 1) {
+                    val validator = update[j+1].toString().plus("|").plus(update[j])
 //                    println("checking \"$validator\"")
                     if (ordering.contains(validator)) {
 //                        println("invalid")
                         invalid = true
-                        Collections.swap(update, j, i)
+                        Collections.swap(update, j+1, j)
                     }
                     j++
                 }
@@ -130,12 +130,12 @@ fun main() {
     val testInput = readInput("Day05_test")
 //    check(part1(testInput) == 143)
 //    println("part2 test")
-//    check(part2(testInput) == 123)
+    check(part2(testInput) == 123)
 //
 //    // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day05")
 //    println("real deal part 1")
 //    part1(input).println()
 //    println("real deal part 2")
-//    part2(input).println()
+    part2(input).println()
 }
