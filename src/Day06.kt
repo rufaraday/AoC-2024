@@ -38,7 +38,7 @@ fun main() {
         nextPos: Triple<Int, Int, Char>
     ): Char {
         val oldMark = area[position.second][position.first]
-//        println("Marks: old = $oldMark, position = ${position.third}, next = ${position.third}")
+        println("Marks: old = $oldMark, position = ${position.third}, next = ${position.third}")
         val newMark = when (oldMark) {
             '.' -> {
                 if (nextPos.third == position.third) {
@@ -102,6 +102,13 @@ fun main() {
                 }
             }
 
+            '↔' -> '↔'
+            '↕' -> '↕'
+            '⥢' -> '⥢'
+            '⥤' -> '⥤'
+            '⥣' -> '⥣'
+            '⥥' -> '⥥'
+
             '+' -> '+'
             '^' -> '↑'  // starting point
             else -> '?' // should not happen
@@ -159,7 +166,11 @@ fun main() {
                     (oldMark == '↑' && nextPos.third == '^') ||
                     (oldMark == '↓' && nextPos.third == 'v') ||
                     (oldMark == '↕' && nextPos.third == '^') ||
-                    (oldMark == '↕' && nextPos.third == 'v')
+                    (oldMark == '↕' && nextPos.third == 'v') ||
+                    (oldMark == '⥢') ||
+                    (oldMark == '⥤') ||
+                    (oldMark == '⥣') ||
+                    (oldMark == '⥥')
                 ) {
                     println("LOOP!")
                     loop = true
