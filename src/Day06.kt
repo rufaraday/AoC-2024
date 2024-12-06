@@ -50,7 +50,13 @@ fun main() {
                         else -> '!' // should not happen
                     }
                 } else {
-                    '+'
+                    when (nextPos.third) {
+                        '<' -> '↩'
+                        '>' -> '↪'
+                        '^' -> '↺'
+                        'v' -> '↶'
+                        else -> '!' // should not happen
+                    }
                 }
             }
 
@@ -58,7 +64,7 @@ fun main() {
                 when (nextPos.third) {
                     '<' -> '←'
                     '>' -> '→'
-                    else -> '+'
+                    else -> '@'
                 }
             }
 
@@ -66,7 +72,7 @@ fun main() {
                 when (nextPos.third) {
                     '^' -> '↑'
                     'v' -> '↓'
-                    else -> '+'
+                    else -> '$'
                 }
             }
 
@@ -74,7 +80,7 @@ fun main() {
                 when (nextPos.third) {
                     '<' -> '⥢'
                     '>' -> '↔'
-                    else -> '+'
+                    else -> '%'
                 }
             }
 
@@ -82,7 +88,7 @@ fun main() {
                 when (nextPos.third) {
                     '<' -> '↔'
                     '>' -> '⥤'
-                    else -> '+'
+                    else -> '&'
                 }
             }
 
@@ -90,7 +96,7 @@ fun main() {
                 when (nextPos.third) {
                     '^' -> '⥣'
                     'v' -> '↕'
-                    else -> '+'
+                    else -> '*'
                 }
             }
 
@@ -98,7 +104,16 @@ fun main() {
                 when (nextPos.third) {
                     '^' -> '↕'
                     'v' -> '⥥'
-                    else -> '+'
+                    '<' -> '↵'
+                    '>' -> '↳'
+                    else -> '('
+                }
+            }
+
+            '↵' -> {
+                when (nextPos.third) {
+                    '<' -> '↩'
+                    else -> '~'
                 }
             }
 
@@ -109,9 +124,9 @@ fun main() {
             '⥣' -> '⥣'
             '⥥' -> '⥥'
 
-            '+' -> '+'
+            '+' -> ')'
             '^' -> '↑'  // starting point
-            else -> '?' // should not happen
+            else -> oldMark // should not happen
         }
         return newMark
     }
@@ -123,7 +138,8 @@ fun main() {
     ): Boolean {
         var loop = false
         var pos = position
-        var oldPos = pos
+        val history = arrayOf(-6 to -6, -5 to -5, -4 to -4, -3 to -3, -2 to -2, -1 to -1)
+        var histPos = 0
         val area = startArea.map {it.clone()}.toMutableList()
         // put obstacle and test if there will be a loop
         area[obstacle.second][obstacle.first] = 'O'
@@ -172,7 +188,7 @@ fun main() {
                     (oldMark == '⥤') ||
                     (oldMark == '⥣') ||
                     (oldMark == '⥥') ||
-                    (oldPos.first == nextPos.first && oldPos.second == nextPos.second)
+                    ((history[0].toString() == history[2].toString()) && (history[1].toString() == history[3].toString()))
                 ) {
                     println("LOOP!")
                     loop = true
@@ -181,9 +197,10 @@ fun main() {
             // mark route
             area[pos.second][pos.first] = newMark(area, pos, nextPos)
             // move position
-            oldPos = pos
             pos = nextPos
-            println("obstacle: $obstacle; nextPos: $nextPos")
+            history[histPos] = pos.first to pos.second
+            histPos = (histPos+1).rem(6)
+            println("obstacle: $obstacle; nextPos: $nextPos; history: ${history.contentToString()}")
             // print
 //            printMap(area, pos, -1, true, true)
         }
