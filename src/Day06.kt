@@ -70,6 +70,38 @@ fun main() {
                 }
             }
 
+            '←' -> {
+                when (nextPos.third) {
+                    '<' -> '⥢'
+                    '>' -> '↔'
+                    else -> '+'
+                }
+            }
+
+            '→' -> {
+                when (nextPos.third) {
+                    '<' -> '↔'
+                    '>' -> '⥤'
+                    else -> '+'
+                }
+            }
+
+            '↑' -> {
+                when (nextPos.third) {
+                    '^' -> '⥣'
+                    'v' -> '↕'
+                    else -> '+'
+                }
+            }
+
+            '↓' -> {
+                when (nextPos.third) {
+                    '^' -> '↕'
+                    'v' -> '⥥'
+                    else -> '+'
+                }
+            }
+
             '+' -> '+'
             '^' -> '↑'  // starting point
             else -> '?' // should not happen
@@ -133,8 +165,9 @@ fun main() {
             area[pos.second][pos.first] = newMark(area, pos, nextPos)
             // move position
             pos = nextPos
+            println("obstacle: $obstacle; nextPos: $nextPos")
             // print
-//            printMap(area, pos, -1, true, true)
+            printMap(area, pos, -1, true, true)
         }
         return loop
     }
@@ -243,7 +276,7 @@ fun main() {
                 }
                 // collision detection
                 try {
-                    if (area[nextPos.second][nextPos.first] == '#') {
+                    if (arrayOf('#', 'O').contains(area[nextPos.second][nextPos.first])) {
                         collision = true
                         // rotation
                         nextPos = Triple(position.first, position.second, directions[(directions.indexOf(nextPos.third) + 1).rem(4)])
