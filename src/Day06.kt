@@ -123,6 +123,7 @@ fun main() {
     ): Boolean {
         var loop = false
         var pos = position
+        var oldPos = pos
         val area = startArea.map {it.clone()}.toMutableList()
         // put obstacle and test if there will be a loop
         area[obstacle.second][obstacle.first] = 'O'
@@ -170,7 +171,8 @@ fun main() {
                     (oldMark == '⥢') ||
                     (oldMark == '⥤') ||
                     (oldMark == '⥣') ||
-                    (oldMark == '⥥')
+                    (oldMark == '⥥') ||
+                    (oldPos.first == nextPos.first && oldPos.second == nextPos.second)
                 ) {
                     println("LOOP!")
                     loop = true
@@ -179,6 +181,7 @@ fun main() {
             // mark route
             area[pos.second][pos.first] = newMark(area, pos, nextPos)
             // move position
+            oldPos = pos
             pos = nextPos
             println("obstacle: $obstacle; nextPos: $nextPos")
             // print
@@ -258,6 +261,7 @@ fun main() {
             }
             println()
         }
+//        Thread.sleep(5000)
         return position
     }
 
