@@ -154,8 +154,12 @@ fun main() {
 //                println(oldMark)
                 if ((oldMark == '←' && nextPos.third == '<') ||
                     (oldMark == '→' && nextPos.third == '>') ||
+                    (oldMark == '↔' && nextPos.third == '<') ||
+                    (oldMark == '↔' && nextPos.third == '>') ||
                     (oldMark == '↑' && nextPos.third == '^') ||
-                    (oldMark == '↓' && nextPos.third == 'v')
+                    (oldMark == '↓' && nextPos.third == 'v') ||
+                    (oldMark == '↕' && nextPos.third == '^') ||
+                    (oldMark == '↕' && nextPos.third == 'v')
                 ) {
                     println("LOOP!")
                     loop = true
@@ -167,7 +171,7 @@ fun main() {
             pos = nextPos
             println("obstacle: $obstacle; nextPos: $nextPos")
             // print
-            printMap(area, pos, -1, true, true)
+//            printMap(area, pos, -1, true, true)
         }
         return loop
     }
