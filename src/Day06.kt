@@ -1,5 +1,7 @@
 fun main() {
-    fun inArea(
+    val directions = arrayOf('^', '>', 'v', '<')
+
+    fun isInArea(
         position: Triple<Int, Int, Char>,
         area: MutableList<CharArray>
     ) = position.first >= 0 && position.first < area[0].size && position.second >= 0 && position.second < area.size
@@ -30,13 +32,117 @@ fun main() {
         if (sleep) Thread.sleep(1000)
     }
 
+    fun newMark(
+        area: MutableList<CharArray>,
+        position: Triple<Int, Int, Char>,
+        nextPos: Triple<Int, Int, Char>
+    ): Char {
+        val oldMark = area[position.second][position.first]
+        println("Marks: old = $oldMark, position = ${position.third}, next = ${position.third}")
+        val newMark = when (oldMark) {
+            '.' -> {
+                if (nextPos.third == position.third) {
+                    when (nextPos.third) {
+                        '<' -> '←'
+                        '>' -> '→'
+                        '^' -> '↑'
+                        'v' -> '↓'
+                        else -> '!' // should not happen
+                    }
+                } else {
+                    '+'
+                }
+            }
+
+            '-' -> {
+                when (nextPos.third) {
+                    '<' -> '←'
+                    '>' -> '→'
+                    else -> '+'
+                }
+            }
+
+            '|' -> {
+                when (nextPos.third) {
+                    '^' -> '↑'
+                    'v' -> '↓'
+                    else -> '+'
+                }
+            }
+
+            '+' -> '+'
+            '^' -> '↑'  // starting point
+            else -> '?' // should not happen
+        }
+        return newMark
+    }
+
+    fun hasLoop(
+        position: Triple<Int, Int, Char>,
+        obstacle: Triple<Int, Int, Char>,
+        startArea: List<CharArray>
+    ): Boolean {
+        var loop = false
+        var pos = position
+        val area = startArea.map {it.clone()}.toMutableList()
+        // put obstacle and test if there will be a loop
+        area[obstacle.second][obstacle.first] = 'O'
+        while (isInArea(pos, area)) {
+            System.out.flush()
+            // move
+            var nextPos = pos
+            var collision : Boolean
+            do {
+                // next potential move
+                nextPos = when (nextPos.third) {
+                    '^' -> Triple(pos.first, pos.second - 1, nextPos.third)
+                    'v' -> Triple(pos.first, pos.second + 1, nextPos.third)
+                    '<' -> Triple(pos.first - 1, pos.second, nextPos.third)
+                    '>' -> Triple(pos.first + 1, pos.second, nextPos.third)
+                    else -> pos
+                }
+                // collision detection
+                try {
+                    if (arrayOf('#', 'O').contains(area[nextPos.second][nextPos.first])) {
+                        collision = true
+                        // rotation
+                        nextPos = Triple(pos.first, pos.second,
+                            directions[(directions.indexOf(nextPos.third) + 1).rem(4)])
+                    } else {
+                        collision = false
+                    }
+                } catch (e: java.lang.IndexOutOfBoundsException) {
+                    collision = false
+                }
+            } while (collision)
+            // check if on the loop
+            if(isInArea(nextPos, area)) {
+                val oldMark = area[nextPos.second][nextPos.first]
+                println(oldMark)
+                if ((oldMark == '←' && nextPos.third == '<') ||
+                    (oldMark == '→' && nextPos.third == '>') ||
+                    (oldMark == '↑' && nextPos.third == '^') ||
+                    (oldMark == '↓' && nextPos.third == 'v')
+                ) {
+                    loop = true
+                }
+            }
+            // mark route
+            area[pos.second][pos.first] = newMark(area, pos, nextPos)
+            // move position
+            pos = nextPos
+            // print
+            printMap(area, pos, -1, true, true)
+        }
+        return loop
+    }
+
     fun part1(input: List<String>): Int {
         val area: MutableList<CharArray> = emptyList<CharArray>().toMutableList()
         input.forEach() {
             area.add(it.toCharArray())
         }
         var distance = 0
-        val directions = arrayOf('^', '>', 'v', '<')
         lateinit var position : Triple<Int, Int, Char>
         for (y in 0..<area.size) {
             for (x in 0..<area[y].size) {
@@ -52,7 +158,7 @@ fun main() {
         println("distance = $distance")
         Thread.sleep(1000)
 
-        while (inArea(position, area)) {
+        while (isInArea(position, area)) {
             System.out.flush()
             // move
             var nextPos : Triple<Int, Int, Char>
@@ -80,7 +186,7 @@ fun main() {
                 }
             } while (collision)
             // move position
-            if (!inArea(nextPos, area) || area[nextPos.second][nextPos.first] != 'X') {
+            if (!isInArea(nextPos, area) || area[nextPos.second][nextPos.first] != 'X') {
                 distance++
             }
             area[position.second][position.first] = 'X'
@@ -91,15 +197,8 @@ fun main() {
         return distance
     }
 
-    fun part2(input: List<String>): Int {
-        val area: MutableList<CharArray> = emptyList<CharArray>().toMutableList()
-        input.forEach() {
-            area.add(it.toCharArray())
-        }
-        var loops = 0
-        val directions = arrayOf('^', '>', 'v', '<')
-        lateinit var position : Triple<Int, Int, Char>
-        val startPos : Triple<Int, Int, Char>
+    fun startPosition(area: MutableList<CharArray>): Triple<Int, Int, Char> {
+        lateinit var position: Triple<Int, Int, Char>
         for (y in 0..<area.size) {
             for (x in 0..<area[y].size) {
                 print(area[y][x])
@@ -109,13 +208,24 @@ fun main() {
             }
             println()
         }
-        startPos = position
+        return position
+    }
+
+    fun part2(input: List<String>): Int {
+        val area: MutableList<CharArray> = emptyList<CharArray>().toMutableList()
+        input.forEach() {
+            area.add(it.toCharArray())
+        }
+        var loops = 0
+
+        var position: Triple<Int, Int, Char> = startPosition(area)
+        val startPos : Triple<Int, Int, Char> = position
 
         println("position = (${position.first}, ${position.second})")
         println("loops = $loops")
         Thread.sleep(1000)
 
-        while (inArea(position, area)) {
+        while (isInArea(position, area)) {
             System.out.flush()
             // move
             var nextPos = position
@@ -143,43 +253,9 @@ fun main() {
                 }
             } while (collision)
             // mark route
-            val oldMark = area[position.second][position.first]
-            println("Marks: old = $oldMark, position = ${position.third}, next = ${position.third}")
-            val newMark = when (oldMark) {
-                '.' -> {
-                    if (nextPos.third == position.third) {
-                        when (nextPos.third) {
-                            '<' -> '←'
-                            '>' -> '→'
-                            '^' -> '↑'
-                            'v' -> '↓'
-                            else -> '!' // should not happen
-                        }
-                    } else {
-                        '+'
-                    }
-                }
-                '-' -> {
-                    when (nextPos.third) {
-                        '<' -> '←'
-                        '>' -> '→'
-                        else -> '+'
-                    }
-                }
-                '|' -> {
-                    when (nextPos.third) {
-                        '^' -> '↑'
-                        'v' -> '↓'
-                        else -> '+'
-                    }
-                }
-                '+' -> '+'
-                '^' -> '↑'  // starting point
-                else -> '?' // should not happen
-            }
-            area[position.second][position.first] = newMark
-            // check obstacle
-            if (false /*TODO check if obstacle is possible*/) {
+            area[position.second][position.first] = newMark(area, position, nextPos)
+            // try to add obstacle
+            if (hasLoop(position, nextPos, area.toList())) {
                 if (startPos.first != nextPos.first && startPos.second != nextPos.second) {
                     loops++
                 }
@@ -193,7 +269,16 @@ fun main() {
     }
 
     // Test if implementation meets criteria from the description, like:
-//    check(part1(listOf("test_input")) == 1)
+//    check(!hasLoop(listOf("....#.....",
+//                          ".........#",
+//                          "..........",
+//                          "..#.......",
+//                          ".....O.#..",
+//                          "..........",
+//                          ".#..^.....",
+//                          "........#.",
+//                          "#.........",
+//                          "......#...")))
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day06_test")
