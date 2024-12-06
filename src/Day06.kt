@@ -29,7 +29,7 @@ fun main() {
         } else {
             println("distance = $score")
         }
-        if (sleep) Thread.sleep(1000)
+        if (sleep) Thread.sleep(200)
     }
 
     fun newMark(
@@ -38,7 +38,7 @@ fun main() {
         nextPos: Triple<Int, Int, Char>
     ): Char {
         val oldMark = area[position.second][position.first]
-        println("Marks: old = $oldMark, position = ${position.third}, next = ${position.third}")
+//        println("Marks: old = $oldMark, position = ${position.third}, next = ${position.third}")
         val newMark = when (oldMark) {
             '.' -> {
                 if (nextPos.third == position.third) {
@@ -87,7 +87,8 @@ fun main() {
         val area = startArea.map {it.clone()}.toMutableList()
         // put obstacle and test if there will be a loop
         area[obstacle.second][obstacle.first] = 'O'
-        while (isInArea(pos, area)) {
+        println("obstacle: $obstacle")
+        while (isInArea(pos, area) && !loop) {
             System.out.flush()
             // move
             var nextPos = pos
@@ -118,12 +119,13 @@ fun main() {
             // check if on the loop
             if(isInArea(nextPos, area)) {
                 val oldMark = area[nextPos.second][nextPos.first]
-                println(oldMark)
+//                println(oldMark)
                 if ((oldMark == '←' && nextPos.third == '<') ||
                     (oldMark == '→' && nextPos.third == '>') ||
                     (oldMark == '↑' && nextPos.third == '^') ||
                     (oldMark == '↓' && nextPos.third == 'v')
                 ) {
+                    println("LOOP!")
                     loop = true
                 }
             }
@@ -132,7 +134,7 @@ fun main() {
             // move position
             pos = nextPos
             // print
-            printMap(area, pos, -1, true, true)
+//            printMap(area, pos, -1, true, true)
         }
         return loop
     }
@@ -156,7 +158,7 @@ fun main() {
 
         println("position = (${position.first}, ${position.second})")
         println("distance = $distance")
-        Thread.sleep(1000)
+        Thread.sleep(200)
 
         while (isInArea(position, area)) {
             System.out.flush()
@@ -192,7 +194,7 @@ fun main() {
             area[position.second][position.first] = 'X'
             position = nextPos
             // print
-            printMap(area, position, distance)
+//            printMap(area, position, distance)
         }
         return distance
     }
@@ -223,7 +225,7 @@ fun main() {
 
         println("position = (${position.first}, ${position.second})")
         println("loops = $loops")
-        Thread.sleep(1000)
+        Thread.sleep(200)
 
         while (isInArea(position, area)) {
             System.out.flush()
@@ -255,15 +257,15 @@ fun main() {
             // mark route
             area[position.second][position.first] = newMark(area, position, nextPos)
             // try to add obstacle
-            if (hasLoop(position, nextPos, area.toList())) {
-                if (startPos.first != nextPos.first && startPos.second != nextPos.second) {
+            if (isInArea(nextPos, area) && hasLoop(position, nextPos, area.toList())) {
+                if (startPos.first != nextPos.first || startPos.second != nextPos.second) {
                     loops++
                 }
             }
             // move position
             position = nextPos
             // print
-            printMap(area, position, loops, true, true)
+//            printMap(area, position, loops, true, true)
         }
         return loops
     }
@@ -286,6 +288,6 @@ fun main() {
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day06")
-    part1(input).println()
+//    part1(input).println()
     part2(input).println()
 }
