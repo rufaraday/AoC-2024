@@ -149,10 +149,10 @@ fun main() {
                 '.' -> {
                     if (nextPos.third == position.third) {
                         when (nextPos.third) {
-                            '<' -> '-'
-                            '>' -> '-'
-                            '^' -> '|'
-                            'v' -> '|'
+                            '<' -> '←'
+                            '>' -> '→'
+                            '^' -> '↑'
+                            'v' -> '↓'
                             else -> '!' // should not happen
                         }
                     } else {
@@ -160,21 +160,21 @@ fun main() {
                     }
                 }
                 '-' -> {
-                    if (nextPos.third == '>' || nextPos.third == '<') {
-                        '-'
-                    } else {
-                        '+'
+                    when (nextPos.third) {
+                        '<' -> '←'
+                        '>' -> '→'
+                        else -> '+'
                     }
                 }
                 '|' -> {
-                    if (nextPos.third == '^' || nextPos.third == 'v') {
-                        '|'
-                    } else {
-                        '+'
+                    when (nextPos.third) {
+                        '^' -> '↑'
+                        'v' -> '↓'
+                        else -> '+'
                     }
                 }
                 '+' -> '+'
-                '^' -> '|'  // starting point
+                '^' -> '↑'  // starting point
                 else -> '?' // should not happen
             }
             area[position.second][position.first] = newMark
