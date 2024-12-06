@@ -11,12 +11,13 @@ fun main() {
         sleep: Boolean = true,
         loops: Boolean = false
     ) {
-        if (inArea(position, area)) {
-            area[position.second][position.first] = position.third
-        }
         for (y in 0..<area.size) {
             for (x in 0..<area[y].size) {
-                print(area[y][x])
+                if (x == position.first && y == position.second) {
+                    print(position.third)
+                } else {
+                    print(area[y][x])
+                }
             }
             println()
         }
@@ -26,7 +27,7 @@ fun main() {
         } else {
             println("distance = $score")
         }
-        if (sleep) Thread.sleep(100)
+        if (sleep) Thread.sleep(1000)
     }
 
     fun part1(input: List<String>): Int {
@@ -98,6 +99,7 @@ fun main() {
         var loops = 0
         val directions = arrayOf('^', '>', 'v', '<')
         lateinit var position : Triple<Int, Int, Char>
+        val startPos : Triple<Int, Int, Char>
         for (y in 0..<area.size) {
             for (x in 0..<area[y].size) {
                 print(area[y][x])
@@ -107,6 +109,7 @@ fun main() {
             }
             println()
         }
+        startPos = position
 
         println("position = (${position.first}, ${position.second})")
         println("loops = $loops")
@@ -139,14 +142,39 @@ fun main() {
                     collision = false
                 }
             } while (collision)
-            // move position
-            if (!inArea(nextPos, area) || area[nextPos.second][nextPos.first] != 'X') {
-//                distance++
+            // mark route
+            val oldMark = area[position.second][position.first]
+            println("Marks: old = $oldMark, position = ${position.third}, next = ${position.third}")
+            var newMark = when (oldMark) {
+                '.' -> {
+                    if (nextPos.third == position.third) {
+                        when (nextPos.third) {
+                            '<' -> '-'
+                            '>' -> '-'
+                            '^' -> '|'
+                            'v' -> '|'
+                            else -> '!'
+                        }
+                    } else {
+                        '+'
+                    }
+                }
+                '-' -> '+'
+                '|' -> '+'
+                '^' -> '|'
+                else -> '?'
             }
-            area[position.second][position.first] = 'X'
+            area[position.second][position.first] = newMark
+            // check obstacle
+            if (false /*TODO check if obstacle is possible*/) {
+                if (startPos.first != nextPos.first && startPos.second != nextPos.second) {
+                    loops++
+                }
+            }
+            // move position
             position = nextPos
             // print
-            // printMap(area, position, distance, true)
+            printMap(area, position, loops, true, true)
         }
         return loops
     }
@@ -156,7 +184,7 @@ fun main() {
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day06_test")
-    check(part1(testInput) == 41)
+    check(part2(testInput) == 6)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day06")
