@@ -118,15 +118,15 @@ fun main() {
         while (inArea(position, area)) {
             System.out.flush()
             // move
-            var nextPos : Triple<Int, Int, Char>
+            var nextPos = position
             var collision : Boolean
             do {
                 // next potential move
-                nextPos = when (position.third) {
-                    '^' -> Triple(position.first, position.second - 1, position.third)
-                    'v' -> Triple(position.first, position.second + 1, position.third)
-                    '<' -> Triple(position.first - 1, position.second, position.third)
-                    '>' -> Triple(position.first + 1, position.second, position.third)
+                nextPos = when (nextPos.third) {
+                    '^' -> Triple(position.first, position.second - 1, nextPos.third)
+                    'v' -> Triple(position.first, position.second + 1, nextPos.third)
+                    '<' -> Triple(position.first - 1, position.second, nextPos.third)
+                    '>' -> Triple(position.first + 1, position.second, nextPos.third)
                     else -> position
                 }
                 // collision detection
@@ -134,7 +134,7 @@ fun main() {
                     if (area[nextPos.second][nextPos.first] == '#') {
                         collision = true
                         // rotation
-                        position = Triple(position.first, position.second, directions[(directions.indexOf(position.third) + 1).rem(4)])
+                        nextPos = Triple(position.first, position.second, directions[(directions.indexOf(nextPos.third) + 1).rem(4)])
                     } else {
                         collision = false
                     }
@@ -145,7 +145,7 @@ fun main() {
             // mark route
             val oldMark = area[position.second][position.first]
             println("Marks: old = $oldMark, position = ${position.third}, next = ${position.third}")
-            var newMark = when (oldMark) {
+            val newMark = when (oldMark) {
                 '.' -> {
                     if (nextPos.third == position.third) {
                         when (nextPos.third) {
@@ -153,16 +153,29 @@ fun main() {
                             '>' -> '-'
                             '^' -> '|'
                             'v' -> '|'
-                            else -> '!'
+                            else -> '!' // should not happen
                         }
                     } else {
                         '+'
                     }
                 }
-                '-' -> '+'
-                '|' -> '+'
-                '^' -> '|'
-                else -> '?'
+                '-' -> {
+                    if (nextPos.third == '>' || nextPos.third == '<') {
+                        '-'
+                    } else {
+                        '+'
+                    }
+                }
+                '|' -> {
+                    if (nextPos.third == '^' || nextPos.third == 'v') {
+                        '|'
+                    } else {
+                        '+'
+                    }
+                }
+                '+' -> '+'
+                '^' -> '|'  // starting point
+                else -> '?' // should not happen
             }
             area[position.second][position.first] = newMark
             // check obstacle
