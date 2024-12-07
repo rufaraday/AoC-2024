@@ -38,7 +38,6 @@ fun main() {
         nextPos: Triple<Int, Int, Char>
     ): Char {
         val oldMark = area[position.second][position.first]
-        println("Marks: old = $oldMark, position = ${position.third}, next = ${position.third}")
         val newMark = when (oldMark) {
             '.' -> {
                 if (nextPos.third == position.third) {
@@ -96,6 +95,8 @@ fun main() {
                 when (nextPos.third) {
                     '^' -> '⥣'
                     'v' -> '↕'
+                    '<' -> '↰'
+                    '>' -> '↱'
                     else -> '*'
                 }
             }
@@ -134,13 +135,13 @@ fun main() {
     fun hasLoop(
         position: Triple<Int, Int, Char>,
         obstacle: Triple<Int, Int, Char>,
-        startArea: List<CharArray>
+        startArea: List<CharArray>,
+        historyOrig: MutableList<Pair<Pair<Int, Int>, Pair<Int, Int>>>
     ): Boolean {
         var loop = false
         var pos = position
-        val history = arrayOf(-6 to -6, -5 to -5, -4 to -4, -3 to -3, -2 to -2, -1 to -1)
-        var histPos = 0
-        val area = startArea.map {it.clone()}.toMutableList()
+        val area = startArea.map { it.clone() }.toMutableList()
+        val history = historyOrig.map { it.copy() }.toMutableList()
         // put obstacle and test if there will be a loop
         area[obstacle.second][obstacle.first] = 'O'
         println("obstacle: $obstacle")
@@ -176,20 +177,8 @@ fun main() {
             if(isInArea(nextPos, area)) {
                 val oldMark = area[nextPos.second][nextPos.first]
 //                println(oldMark)
-                if ((oldMark == '←' && nextPos.third == '<') ||
-                    (oldMark == '→' && nextPos.third == '>') ||
-                    (oldMark == '↔' && nextPos.third == '<') ||
-                    (oldMark == '↔' && nextPos.third == '>') ||
-                    (oldMark == '↑' && nextPos.third == '^') ||
-                    (oldMark == '↓' && nextPos.third == 'v') ||
-                    (oldMark == '↕' && nextPos.third == '^') ||
-                    (oldMark == '↕' && nextPos.third == 'v') ||
-                    (oldMark == '⥢') ||
-                    (oldMark == '⥤') ||
-                    (oldMark == '⥣') ||
-                    (oldMark == '⥥') ||
-                    ((history[0].toString() == history[2].toString()) && (history[1].toString() == history[3].toString()))
-                ) {
+//                println("check if contains: ${(pos.first to pos.second) to (nextPos.first to nextPos.second)}")
+                if (history.contains((pos.first to pos.second) to (nextPos.first to nextPos.second))) {
                     println("LOOP!")
                     loop = true
                 }
@@ -197,10 +186,9 @@ fun main() {
             // mark route
             area[pos.second][pos.first] = newMark(area, pos, nextPos)
             // move position
+            println("obstacle: $obstacle; pos: $pos; nextPos: $nextPos" /*; history: $history*/)
+            history.add((pos.first to pos.second) to (nextPos.first to nextPos.second))
             pos = nextPos
-            history[histPos] = pos.first to pos.second
-            histPos = (histPos+1).rem(6)
-            println("obstacle: $obstacle; nextPos: $nextPos; history: ${history.contentToString()}")
             // print
 //            printMap(area, pos, -1, true, true)
         }
@@ -292,6 +280,8 @@ fun main() {
         var position: Triple<Int, Int, Char> = startPosition(area)
         val startPos : Triple<Int, Int, Char> = position
 
+        val history = emptyList<Pair<Pair<Int, Int>, Pair<Int, Int>>>().toMutableList()
+
         println("position = (${position.first}, ${position.second})")
         println("loops = $loops")
         Thread.sleep(200)
@@ -326,7 +316,7 @@ fun main() {
             // mark route
             area[position.second][position.first] = newMark(area, position, nextPos)
             // try to add obstacle
-            if (isInArea(nextPos, area) && hasLoop(position, nextPos, area.toList())) {
+            if (isInArea(nextPos, area) && hasLoop(position, nextPos, area.toList(), history)) {
                 if (startPos.first != nextPos.first || startPos.second != nextPos.second) {
                     loops++
                 }
