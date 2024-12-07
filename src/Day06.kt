@@ -275,7 +275,7 @@ fun main() {
         input.forEach() {
             area.add(it.toCharArray())
         }
-        var loops = 0
+        val loops : MutableSet<Pair<Int, Int>> = emptySet<Pair<Int, Int>>().toMutableSet().toMutableSet()
 
         var position: Triple<Int, Int, Char> = startPosition(area)
         val startPos : Triple<Int, Int, Char> = position
@@ -318,7 +318,7 @@ fun main() {
             // try to add obstacle
             if (isInArea(nextPos, area) && hasLoop(position, nextPos, area.toList(), history)) {
                 if (startPos.first != nextPos.first || startPos.second != nextPos.second) {
-                    loops++
+                    loops.add(nextPos.first to nextPos.second)
                 }
             }
             // move position
@@ -326,7 +326,7 @@ fun main() {
             // print
 //            printMap(area, position, loops, true, true)
         }
-        return loops
+        return loops.size
     }
 
     // Test if implementation meets criteria from the description, like:
