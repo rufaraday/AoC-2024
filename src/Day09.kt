@@ -1,7 +1,7 @@
 import java.math.BigInteger
 
 fun main() {
-    fun part1(input: List<String>): Int {
+    fun part1(input: List<String>): Long {
         val disc = emptyList<Int>().toMutableList()
         // read disc
         var id = 0
@@ -31,7 +31,7 @@ fun main() {
 //            println(disc)
         }
         // calculate checksum
-        var checksum = 0
+        var checksum : Long = 0
         for (i in 0..disc.lastIndex) {
             if (disc[i] > 0) {
                 checksum += i * disc[i]
@@ -49,7 +49,7 @@ fun main() {
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day09_test")
-    check(part1(testInput) == 1928)
+    check(part1(testInput) == 1928.toLong())
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day09")
