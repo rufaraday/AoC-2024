@@ -1,6 +1,7 @@
 import kotlin.time.measureTime
 
 fun main() {
+    val cache = mutableMapOf<Long, MutableMap<Int, Long>>()
     fun part1(input: List<String>): Int {
         val stones = input[0].split(" ").map{ it.toLong() }.toMutableList()
 //        println(stones)
@@ -30,6 +31,12 @@ fun main() {
     fun changeStone(stone: Long, blinks: Int) : Long {
         var count = 1L
 //        println("count[stone=$stone, blinks=$blinks]")
+        // Read from cache
+        try {
+            return cache[stone]!![blinks]!!
+        } catch (e: java.lang.NullPointerException) {
+            // do nothing - move to calculation
+        }
         if (blinks > 0) {
             val length = stone.toString().length
             count = when {
@@ -44,6 +51,16 @@ fun main() {
             }
         }
 //        println("count[stone=$stone, blinks=$blinks] = $count")
+//        Thread.sleep(1000)
+        // Write to cache
+        if (cache.contains(stone)) {
+            // Add to existing per stone map
+            cache[stone]?.set(blinks, count)
+        } else {
+            // Create and add new per stone map
+            cache[stone] = mutableMapOf(blinks to count)
+        }
+//        println(cache)
 //        Thread.sleep(1000)
         return count
     }
@@ -82,6 +99,8 @@ fun main() {
     }
     println(timeTaken)
 
+    println(cache)
+
     // Or read a large test input from the `src/Day01_test.txt` file:
 //    val testInput = readInput("Day11_test")
 //    check(part1(testInput) == 1)
@@ -98,6 +117,9 @@ fun main() {
         part2(input, 25).println()
     }
     println(timeTaken)
-//    println("PART 2, input data, 75 blinks")
-//    part2(input, 75).println()
+    timeTaken = measureTime {
+        println("PART 2, input data, 75 blinks")
+        part2(input, 75).println()
+    }
+    println(timeTaken)
 }
