@@ -57,6 +57,8 @@ fun main() {
                     if (i != j) {
                         val p1 = antenna.value[i]
                         val p2 = antenna.value[j]
+                        antinodes += p1
+                        antinodes += p2
                         val d = p1.minus(p2)
                         var ap1 = p1
                         var ap2 = p2
