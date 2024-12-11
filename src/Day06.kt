@@ -32,111 +32,11 @@ fun main() {
         if (sleep) Thread.sleep(200)
     }
 
-    fun newMark(
-        area: MutableList<CharArray>,
-        position: Triple<Int, Int, Char>,
-        nextPos: Triple<Int, Int, Char>
-    ): Char {
-        val oldMark = area[position.second][position.first]
-        val newMark = when (oldMark) {
-            '.' -> {
-                if (nextPos.third == position.third) {
-                    when (nextPos.third) {
-                        '<' -> '←'
-                        '>' -> '→'
-                        '^' -> '↑'
-                        'v' -> '↓'
-                        else -> '!' // should not happen
-                    }
-                } else {
-                    when (nextPos.third) {
-                        '<' -> '↩'
-                        '>' -> '↪'
-                        '^' -> '↺'
-                        'v' -> '↶'
-                        else -> '!' // should not happen
-                    }
-                }
-            }
-
-            '-' -> {
-                when (nextPos.third) {
-                    '<' -> '←'
-                    '>' -> '→'
-                    else -> '@'
-                }
-            }
-
-            '|' -> {
-                when (nextPos.third) {
-                    '^' -> '↑'
-                    'v' -> '↓'
-                    else -> '$'
-                }
-            }
-
-            '←' -> {
-                when (nextPos.third) {
-                    '<' -> '⥢'
-                    '>' -> '↔'
-                    else -> '%'
-                }
-            }
-
-            '→' -> {
-                when (nextPos.third) {
-                    '<' -> '↔'
-                    '>' -> '⥤'
-                    else -> '&'
-                }
-            }
-
-            '↑' -> {
-                when (nextPos.third) {
-                    '^' -> '⥣'
-                    'v' -> '↕'
-                    '<' -> '↰'
-                    '>' -> '↱'
-                    else -> '*'
-                }
-            }
-
-            '↓' -> {
-                when (nextPos.third) {
-                    '^' -> '↕'
-                    'v' -> '⥥'
-                    '<' -> '↵'
-                    '>' -> '↳'
-                    else -> '('
-                }
-            }
-
-            '↵' -> {
-                when (nextPos.third) {
-                    '<' -> '↩'
-                    else -> '~'
-                }
-            }
-
-            '↔' -> '↔'
-            '↕' -> '↕'
-            '⥢' -> '⥢'
-            '⥤' -> '⥤'
-            '⥣' -> '⥣'
-            '⥥' -> '⥥'
-
-            '+' -> ')'
-            '^' -> '↑'  // starting point
-            else -> oldMark // should not happen
-        }
-        return newMark
-    }
-
     fun hasLoop(
         position: Triple<Int, Int, Char>,
         obstacle: Triple<Int, Int, Char>,
         startArea: List<CharArray>,
-        historyOrig: MutableList<Pair<Pair<Int, Int>, Pair<Int, Int>>>
+        historyOrig: MutableSet<Pair<Pair<Int, Int>, Pair<Int, Int>>>
     ): Boolean {
         var loop = false
         var pos = position
@@ -175,18 +75,14 @@ fun main() {
             } while (collision)
             // check if on the loop
             if(isInArea(nextPos, area)) {
-                val oldMark = area[nextPos.second][nextPos.first]
-//                println(oldMark)
 //                println("check if contains: ${(pos.first to pos.second) to (nextPos.first to nextPos.second)}")
                 if (history.contains((pos.first to pos.second) to (nextPos.first to nextPos.second))) {
                     println("LOOP!")
                     loop = true
                 }
             }
-            // mark route
-            area[pos.second][pos.first] = newMark(area, pos, nextPos)
             // move position
-            println("obstacle: $obstacle; pos: $pos; nextPos: $nextPos" /*; history: $history*/)
+//            println("obstacle: $obstacle; pos: $pos; nextPos: $nextPos" /*; history: $history*/)
             history.add((pos.first to pos.second) to (nextPos.first to nextPos.second))
             pos = nextPos
             // print
@@ -275,16 +171,16 @@ fun main() {
         input.forEach() {
             area.add(it.toCharArray())
         }
-        val loops : MutableSet<Pair<Int, Int>> = emptySet<Pair<Int, Int>>().toMutableSet().toMutableSet()
+        val loops : MutableSet<Pair<Int, Int>> = mutableSetOf()
 
         var position: Triple<Int, Int, Char> = startPosition(area)
         val startPos : Triple<Int, Int, Char> = position
 
-        val history = emptyList<Pair<Pair<Int, Int>, Pair<Int, Int>>>().toMutableList()
+        val history = mutableSetOf<Pair<Pair<Int, Int>, Pair<Int, Int>>>()
 
         println("position = (${position.first}, ${position.second})")
         println("loops = $loops")
-        Thread.sleep(200)
+//        Thread.sleep(200)
 
         while (isInArea(position, area)) {
             System.out.flush()
@@ -313,8 +209,6 @@ fun main() {
                     collision = false
                 }
             } while (collision)
-            // mark route
-            area[position.second][position.first] = newMark(area, position, nextPos)
             // try to add obstacle
             if (isInArea(nextPos, area) && hasLoop(position, nextPos, area.toList(), history)) {
                 if (startPos.first != nextPos.first || startPos.second != nextPos.second) {
