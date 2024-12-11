@@ -11,8 +11,12 @@ fun main() {
         position: Triple<Int, Int, Char>,
         score: Int,
         sleep: Boolean = true,
-        loops: Boolean = false
+        loops: Boolean = false,
+        history: MutableList<Pair<Pair<Int, Int>, Pair<Int, Int>>>
     ) {
+        history.forEach() {
+            area[it.first.second][it.first.first] = 'X'
+        }
         for (y in 0..<area.size) {
             for (x in 0..<area[y].size) {
                 if (x == position.first && y == position.second) {
@@ -78,7 +82,9 @@ fun main() {
 //                println("check if contains: ${(pos.first to pos.second) to (nextPos.first to nextPos.second)}")
                 if (history.contains((pos.first to pos.second) to (nextPos.first to nextPos.second))) {
                     println("LOOP!")
+                    printMap(area, pos, -1, true, true, history)
                     loop = true
+                    readLine()
                 }
             }
             // move position
@@ -87,6 +93,8 @@ fun main() {
             pos = nextPos
             // print
 //            printMap(area, pos, -1, true, true)
+//            Thread.sleep(500)
+            System.out.flush()
         }
         return loop
     }
