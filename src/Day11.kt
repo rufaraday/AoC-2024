@@ -29,20 +29,18 @@ fun main() {
 
     fun changeStone(stone: Long, blinks: Int) : Long {
         var count = 1L
-        var b = blinks
 //        println("count[stone=$stone, blinks=$blinks]")
-        if (b > 0) {
-            b--
+        if (blinks > 0) {
             val length = stone.toString().length
             count = when {
-                stone == 0L -> changeStone(1L, b)
+                stone == 0L -> changeStone(1L, blinks - 1)
                 length.rem(2) == 0 -> {
                     val value = stone
-                    changeStone(value.toString().drop(length.div(2)).toLong(), b) +
-                            changeStone(value.toString().dropLast(length.div(2)).toLong(), b)
+                    changeStone(value.toString().drop(length.div(2)).toLong(), blinks - 1) +
+                            changeStone(value.toString().dropLast(length.div(2)).toLong(), blinks - 1)
                 }
 
-                else -> changeStone(stone * 2024, b)
+                else -> changeStone(stone * 2024, blinks - 1)
             }
         }
 //        println("count[stone=$stone, blinks=$blinks] = $count")
