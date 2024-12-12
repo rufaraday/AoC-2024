@@ -46,9 +46,13 @@ fun main() {
         var pos = position
         val area = startArea.map { it.clone() }.toMutableList()
         val history = historyOrig.map { it.copy() }.toMutableList()
+//        println("historyOrig (${historyOrig.size}) = $historyOrig")
+//        println("history (${history.size}) = $history")
+//        readLine()
+
         // put obstacle and test if there will be a loop
         area[obstacle.second][obstacle.first] = 'O'
-        println("obstacle: $obstacle")
+//        println("obstacle: $obstacle")
         while (isInArea(pos, area) && !loop) {
             System.out.flush()
             // move
@@ -186,8 +190,8 @@ fun main() {
 
         val history = mutableSetOf<Pair<Pair<Int, Int>, Pair<Int, Int>>>()
 
-        println("position = (${position.first}, ${position.second})")
-        println("loops = $loops")
+//        println("position = (${position.first}, ${position.second})")
+//        println("loops = $loops")
 //        Thread.sleep(200)
 
         while (isInArea(position, area)) {
@@ -223,6 +227,7 @@ fun main() {
                     loops.add(nextPos.first to nextPos.second)
                 }
             }
+            history.add((position.first to position.second) to (nextPos.first to nextPos.second))
             // move position
             position = nextPos
             // print
