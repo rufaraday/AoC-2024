@@ -79,6 +79,45 @@ fun main() {
         return cost
     }
 
+    fun findBorderPlots(vector: Pair<Int, Int>, region: Pair<Set<Pair<Int, Int>>, Int>): Set<Pair<Int, Int>> {
+        val border = mutableSetOf<Pair<Int, Int>>()
+        region.first.forEach {
+            if (!region.first.contains(it.first + vector.first to it.second + vector.second)) {
+                border.add((it))
+            }
+        }
+        return border
+    }
+
+    fun countBorders(border: Set<Pair<Int, Int>>, directions: Pair<Pair<Int, Int>, Pair<Int, Int>>): Int {
+        val edges = mutableListOf<List<Pair<Int, Int>>>()
+        val allocated = mutableSetOf<Pair<Int, Int>>()
+        border.forEach {
+            if (it !in allocated) {
+                val edge = mutableListOf<Pair<Int, Int>>()
+                val plots = mutableListOf(it)
+                allocated.add(it)
+                while (plots.isNotEmpty()) {
+                    val first = plots[0].plus(directions.first)
+                    if (border.contains(first) && !allocated.contains(first)) {
+                        edge.add(first)
+                        plots.add(first)
+                        allocated.add(first)
+                    }
+                    val second = plots[0].plus(directions.second)
+                    if (border.contains(second) && !allocated.contains(second)) {
+                        edge.add(second)
+                        plots.add(second)
+                        allocated.add(second)
+                    }
+                    plots.removeAt(0)
+                }
+                edges.add(edge)
+            }
+        }
+        return edges.size
+    }
+
     fun part2(input: List<String>): Int {
 
         val regions = mutableListOf<Pair<Set<Pair<Int, Int>>, Int>>()
@@ -130,7 +169,21 @@ fun main() {
         }
         var cost = 0
         regions.forEach {r ->
+            var borders = 0
+            val northBorder = findBorderPlots(0 to -1, r)
+            borders += countBorders(northBorder, (-1 to 0) to (1 to 0))
+            val southBorder = findBorderPlots(0 to 1, r)
+            borders += countBorders(southBorder, (-1 to 0) to (1 to 0))
+            val westBorder = findBorderPlots(-1 to 0, r)
+            borders += countBorders(westBorder, (0 to -1) to (0 to 1))
+            val eastBorder = findBorderPlots(1 to 0, r)
+            borders += countBorders(eastBorder, (0 to -1) to (0 to 1))
             println("${r.first.size} plots: $r")
+            println("north border plots: $northBorder")
+            println("south border plots: $southBorder")
+            println("west border plots: $westBorder")
+            println("east border plots: $eastBorder")
+            cost += borders * r.first.size
         }
         return cost
     }
