@@ -39,3 +39,19 @@ fun Pair<Int, Int>.plus(p: Pair<Int, Int>): Pair<Int, Int> {
 fun Pair<Int, Int>.isIn(p: Pair<Int, Int>): Boolean {
     return this.first in 0..<p.first && this.second in 0..<p.second
 }
+
+fun Pair<Int, Int>.neighbours(): List<Pair<Int, Int>> {
+    return listOf(this.first to this.second + 1,
+        this.first to this.second - 1,
+        this.first + 1 to this.second,
+        this.first - 1 to this.second)
+}
+
+fun printCharMatrix(area: MutableList<MutableList<Char>>) {
+    area.forEach {
+        it.forEach {
+            print(it)
+        }
+        println()
+    }
+}
