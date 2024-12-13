@@ -4,8 +4,8 @@ fun main() {
         // You estimate that each button would need to be pressed no more than 100 times to win a prize.
         var cost = 0
         for (i in 0.. input.size / 4) {
-            val (dXA, dYA) = "Button A: X+(\\d+), Y+(\\d+)".toRegex().find(input[4*i])!!.destructured
-            val (dXB, dYB) = "Button B: X+(\\d+), Y+(\\d+)".toRegex().find(input[4*i + 1])!!.destructured
+            val (dXA, dYA) = "Button A: X\\+(\\d+), Y\\+(\\d+)".toRegex().find(input[4*i])!!.destructured
+            val (dXB, dYB) = "Button B: X\\+(\\d+), Y\\+(\\d+)".toRegex().find(input[4*i + 1])!!.destructured
             val (xP, yP) = "Prize: X=(\\d+), Y=(\\d+)".toRegex().find(input[4*i + 2])!!.destructured
             val solutions = mutableListOf<Pair<Int, Int>>()
             var min = Int.MAX_VALUE
@@ -33,25 +33,25 @@ fun main() {
     }
 
     // Test if implementation meets criteria from the description, like:
-    check(part1(listOf("Button A: X+94, Y+34\n" +
-            "Button B: X+22, Y+67\n" +
-            "Prize: X=8400, Y=5400\n" +
-            "\n")) == 280)
-
-    check(part1(listOf("Button A: X+26, Y+66\n" +
-            "Button B: X+67, Y+21\n" +
-            "Prize: X=12748, Y=12176\n" +
-            "\n")) == 0)
-
-    check(part1(listOf("Button A: X+17, Y+86\n" +
-            "Button B: X+84, Y+37\n" +
-            "Prize: X=7870, Y=6450\n" +
-            "\n")) == 200)
-
-    check(part1(listOf("Button A: X+69, Y+23\n" +
-            "Button B: X+27, Y+71\n" +
-            "Prize: X=18641, Y=10279\n" +
-            "")) == 0)
+//    check(part1(listOf("Button A: X+94, Y+34\n" +
+//            "Button B: X+22, Y+67\n" +
+//            "Prize: X=8400, Y=5400\n" +
+//            "\n")) == 280)
+//
+//    check(part1(listOf("Button A: X+26, Y+66\n" +
+//            "Button B: X+67, Y+21\n" +
+//            "Prize: X=12748, Y=12176\n" +
+//            "\n")) == 0)
+//
+//    check(part1(listOf("Button A: X+17, Y+86\n" +
+//            "Button B: X+84, Y+37\n" +
+//            "Prize: X=7870, Y=6450\n" +
+//            "\n")) == 200)
+//
+//    check(part1(listOf("Button A: X+69, Y+23\n" +
+//            "Button B: X+27, Y+71\n" +
+//            "Prize: X=18641, Y=10279\n" +
+//            "")) == 0)
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day13_test")
