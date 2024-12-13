@@ -56,7 +56,7 @@ fun main() {
 
             if ((pX == a * dXA.toBigInteger() + b * dXB.toBigInteger()) && (pY == a * dYA.toBigInteger() + b * dYB.toBigInteger())) {
                 println()
-                cost += (a * BigInteger("2") + b).toInt()
+                cost += (a * BigInteger("2") + b).toLong()
             } else {
                 println(" -xX not a solution")
             }
