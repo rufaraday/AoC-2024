@@ -41,8 +41,8 @@ fun main() {
             val (xP, yP) = "Prize: X=(\\d+), Y=(\\d+)".toRegex().find(input[4*i + 2])!!.destructured.toList().map {it.toInt()}
 //            val solutions = mutableListOf<Pair<Long, Long>>()
             print("dXA=$dXA, dYA=$dYA; dXB=$dXB, dYB=$dYB; xP=$xP, yP=$yP")
-            val pX = (xP/* + 10000000000000*/).toBigInteger()
-            val pY = (yP/* + 10000000000000*/).toBigInteger()
+            val pX = (xP + 10000000000000).toBigInteger()
+            val pY = (yP + 10000000000000).toBigInteger()
 
             val b = (pY.multiply(dXA.toBigInteger()) - pX.multiply(dYA.toBigInteger())).divide((dYB * dXA - dXB * dYA).toBigInteger())
             val a = (pY - b.multiply(dYB.toBigInteger())) / dYA.toBigInteger()
