@@ -1,3 +1,5 @@
+import java.math.BigInteger
+
 fun main() {
     fun part1(input: List<String>): Int {
         // What is the fewest tokens you would have to spend to win all possible prizes?
@@ -34,34 +36,30 @@ fun main() {
         // You estimate that each button would need to be pressed no more than 100 times to win a prize.
         var cost = 0L
         for (i in 0.. input.size / 4) {
-            val (dXA, dYA) = "Button A: X\\+(\\d+), Y\\+(\\d+)".toRegex().find(input[4*i])!!.destructured
-            val (dXB, dYB) = "Button B: X\\+(\\d+), Y\\+(\\d+)".toRegex().find(input[4*i + 1])!!.destructured
-            val (xP, yP) = "Prize: X=(\\d+), Y=(\\d+)".toRegex().find(input[4*i + 2])!!.destructured
+            val (dXA, dYA) = "Button A: X\\+(\\d+), Y\\+(\\d+)".toRegex().find(input[4*i])!!.destructured.toList().map {it.toInt()}
+            val (dXB, dYB) = "Button B: X\\+(\\d+), Y\\+(\\d+)".toRegex().find(input[4*i + 1])!!.destructured.toList().map {it.toInt()}
+            val (xP, yP) = "Prize: X=(\\d+), Y=(\\d+)".toRegex().find(input[4*i + 2])!!.destructured.toList().map {it.toInt()}
 //            val solutions = mutableListOf<Pair<Long, Long>>()
-            println("dXA=$dXA, dYA=$dYA; dXB=$dXB, dYB=$dYB; xP=$xP, yP=$yP")
-            var min = Long.MAX_VALUE
-            val pX = xP.toLong() + 10000000000000
-            val pY = yP.toLong() + 10000000000000
-            var a = 0L
-            var bX : Double
-            var bY : Double
-            while (a * dXA.toInt() < pX && a * dYA.toInt() < pY) {
-                bX = (pX - a * dXA.toInt()) / dXB.toDouble()
-                bY = (pY - a * dYA.toInt()) / dYB.toDouble()
-                println("a=$a bX=$bX bY=$bY dA=$dXA $dYA dB=$dXB $dYB prize=$pX $pY")
-                if (bX == bY) {
-//                    solutions += a to bX
-                    if (3 * a + bX < min) {
-                        min = 3 * a + bX.toInt()
-                        println("    NEW MIN $min (a=$a b=$bX")
-                    }
-                }
-                a++
+            print("dXA=$dXA, dYA=$dYA; dXB=$dXB, dYB=$dYB; xP=$xP, yP=$yP")
+            val pX = (xP/* + 10000000000000*/).toBigInteger()
+            val pY = (yP/* + 10000000000000*/).toBigInteger()
+
+            val b = (pY.multiply(dXA.toBigInteger()) - pX.multiply(dYA.toBigInteger())).divide((dYB * dXA - dXB * dYA).toBigInteger())
+            val a = (pY - b.multiply(dYB.toBigInteger())) / dYA.toBigInteger()
+
+            println(" -> a = $a, b = $b")
+
+            println("check pY - b.multiply(dYB.toBigInteger()) = $pY - $b * $dYB = ${pY - b.multiply(dYB.toBigInteger())}")
+
+            println(a * dXA.toBigInteger() + b * dXB.toBigInteger())
+            println(a * dYA.toBigInteger() + b * dYB.toBigInteger())
+
+            if ((pX == a * dXA.toBigInteger() + b * dXB.toBigInteger()) && (pY == a * dYA.toBigInteger() + b * dYB.toBigInteger())) {
+                println()
+                cost += (a * BigInteger("2") + b).toInt()
+            } else {
+                println(" -xX not a solution")
             }
-            if (min == Long.MAX_VALUE) {
-                min = 0
-            }
-            cost += min
         }
         return cost
     }
@@ -94,6 +92,6 @@ fun main() {
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day13")
-//    part1(input).println()
-//    part2(input).println()
+    part1(input).println()
+    part2(input).println()
 }
