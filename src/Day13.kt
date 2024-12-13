@@ -31,10 +31,10 @@ fun main() {
         return cost
     }
 
-    fun part2(input: List<String>): Long {
+    fun part2(input: List<String>): BigInteger {
         // What is the fewest tokens you would have to spend to win all possible prizes?
         // You estimate that each button would need to be pressed no more than 100 times to win a prize.
-        var cost = 0L
+        var cost = 0.toBigInteger()
         for (i in 0.. input.size / 4) {
             val (dXA, dYA) = "Button A: X\\+(\\d+), Y\\+(\\d+)".toRegex().find(input[4*i])!!.destructured.toList().map {it.toInt()}
             val (dXB, dYB) = "Button B: X\\+(\\d+), Y\\+(\\d+)".toRegex().find(input[4*i + 1])!!.destructured.toList().map {it.toInt()}
@@ -56,7 +56,7 @@ fun main() {
 
             if ((pX == a * dXA.toBigInteger() + b * dXB.toBigInteger()) && (pY == a * dYA.toBigInteger() + b * dYB.toBigInteger())) {
                 println()
-                cost += (a * BigInteger("2") + b).toLong()
+                cost += (a * BigInteger("3") + b)
             } else {
                 println(" -xX not a solution")
             }
