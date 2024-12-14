@@ -29,8 +29,57 @@ fun main() {
         return firstQuadrant * secondQuadrant * thirdQuadrant * fourthQuadrant
     }
 
-    fun part2(input: List<String>): Int {
-        return input.size
+    fun horizontalLine(area: MutableList<MutableList<Int>>, length: Int): Boolean {
+        var result = false
+        area.forEach {
+            var count = 0
+            for (i in it.indices) {
+                if (it[i] > 0) {
+                    count++
+                } else {
+                    count = 0
+                }
+                if (count == length) {
+                    result = true
+                    break
+                }
+            }
+            if (result) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun part2(input: List<String>, width: Int, height: Int): Int {
+        val robots = mutableListOf<Pair<Pair<Int, Int>, Pair<Int, Int>>>()
+        input.forEach {
+            var (pX, pY, vX, vY) = """p=(\d+),(\d+) v=(-?\d+),(-?\d+)""".toRegex().find(it)!!.destructured.toList().map {it.toInt()}
+            robots += (pX to pY) to (vX to vY)
+            println("$pX, $pY, $vX, $vY")
+        }
+        var s = 0
+        lateinit var area : MutableList<MutableList<Int>>
+        do {
+            area = mutableListOf<MutableList<Int>>()
+            for (i in 0..<height) {
+                area += MutableList(width) { 0 }
+            }
+            robots.forEach { r ->
+                val x = Math.floorMod(r.first.first + r.second.first * s, width)
+                val y = Math.floorMod(r.first.second + r.second.second * s, height)
+                area[y][x]++
+            }
+            s++
+        } while(!horizontalLine(area, 31))
+
+        area.forEach {
+            it.forEach {
+                print(it)
+            }
+            println()
+        }
+        return s
     }
 
     // Test if implementation meets criteria from the description, like:
@@ -43,5 +92,5 @@ fun main() {
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day14")
     part1(input, 101, 103, 100).println()
-    part2(input).println()
+    part2(input, 101, 103).println()
 }
