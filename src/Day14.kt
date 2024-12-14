@@ -58,10 +58,11 @@ fun main() {
             robots += (pX to pY) to (vX to vY)
             println("$pX, $pY, $vX, $vY")
         }
-        var s = 0
+        var s = 1000        // starting second
         lateinit var area : MutableList<MutableList<Int>>
         do {
-            area = mutableListOf<MutableList<Int>>()
+            println(s)
+            area = mutableListOf()
             for (i in 0..<height) {
                 area += MutableList(width) { 0 }
             }
@@ -79,7 +80,7 @@ fun main() {
             }
             println()
         }
-        return s
+        return s - 1
     }
 
     // Test if implementation meets criteria from the description, like:
