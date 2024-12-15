@@ -49,12 +49,12 @@ fun main() {
                     disc.add(it.third)
                 }
             } else {
-                println("error writing $it to $disc")
+                println("error writing $it to disc")
                 throw RuntimeException()
             }
             index += it.second
         }
-        println("disc: $disc")
+//        println("disc: $disc")
     }
 
     fun part2(input: List<String>): Long {
@@ -71,15 +71,15 @@ fun main() {
             }
             discIndex += input[0][i].digitToInt()
         }
-        println("free=$freeMap")
-        println("file=$fileMap")
+//        println("free=$freeMap")
+//        println("file=$fileMap")
 //        println(disc)
         // defrag move files
         for (i in fileMap.size-1 downTo 1) {
             var j = 0
             freeMap.sortWith(compareBy {it.first})
             while (freeMap[j].first < fileMap[i].first) {
-                println("i=$i, j=$j")
+//                println("i=$i, j=$j")
                 if (fileMap[i].second <= freeMap[j].second) {
                     println("${fileMap[i]} fits into ${freeMap[j]}")
                     val indexCache = fileMap[i].first
@@ -101,9 +101,9 @@ fun main() {
                     while (k in 1..freeMap.lastIndex) {
                         if (freeMap[k-1].first + freeMap[k-1].second == freeMap[k].first) {
                             // Merge k and k-1 element
-                            print("Merged ${freeMap[k-1]} and ${freeMap[k]} ")
+//                            print("Merged ${freeMap[k-1]} and ${freeMap[k]} ")
                             freeMap[k-1] = Triple(freeMap[k-1].first ,freeMap[k-1].second + freeMap[k].second ,-1)
-                            println("into ${freeMap[k-1]}")
+//                            println("into ${freeMap[k-1]}")
                             freeMap.removeAt(k)
                             k--
                         }
@@ -112,21 +112,21 @@ fun main() {
                     break
                 }
                 j++
-                println("free=$freeMap")
-                println("file=$fileMap")
-                printDisc(freeMap.toList(), fileMap.toList())
+//                println("free=$freeMap")
+//                println("file=$fileMap")
+//                printDisc(freeMap.toList(), fileMap.toList())
 //                Thread.sleep(1000)
             }
         }
-        println("free=$freeMap")
+//        println("free=$freeMap")
         fileMap.sortWith(compareBy {it.first})
-        println("sorted files=$fileMap")
-        printDisc(freeMap.toList(), fileMap.toList())
+//        println("sorted files=$fileMap")
+//        printDisc(freeMap.toList(), fileMap.toList())
         // calculate checksum
         var checksum : Long = 0
         fileMap.forEach {file ->
             for(i in 0..<file.second) {
-                println("index ${file.first + i} file id ${file.third}")
+//                println("index ${file.first + i} file id ${file.third}")
                 checksum += (file.first + i) * file.third.toLong()
             }
         }
