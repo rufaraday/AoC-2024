@@ -99,6 +99,7 @@ fun main() {
     check(part1(testSmallInput) == 2028)
     val testInput = readInput("Day15_test")
     check(part1(testInput) == 10092)
+    check(part2(testInput) == 9021)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day15")
