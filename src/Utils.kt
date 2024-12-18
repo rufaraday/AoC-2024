@@ -55,3 +55,17 @@ fun printCharMatrix(area: MutableList<MutableList<Char>>) {
         println()
     }
 }
+
+fun findPosition(c: Char, area: MutableList<MutableList<Char>>): Pair<Int, Int> {
+    var x = 0
+    var y = 0
+    while (y < area.size) {
+        x = area[y].indexOf(c)
+        // check if found
+        if (x >= 0) {
+            break
+        }
+        y++
+    }
+    return x to y
+}
