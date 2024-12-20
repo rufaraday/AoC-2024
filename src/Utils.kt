@@ -47,7 +47,7 @@ fun Pair<Int, Int>.neighbours(): List<Pair<Int, Int>> {
         this.first - 1 to this.second)
 }
 
-fun printCharMatrix(area: MutableList<MutableList<Char>>) {
+fun printCharMatrix(area: List<List<Char>>) {
     area.forEach {
         it.forEach {
             print(it)
@@ -56,7 +56,7 @@ fun printCharMatrix(area: MutableList<MutableList<Char>>) {
     }
 }
 
-fun findPosition(c: Char, area: MutableList<MutableList<Char>>): Pair<Int, Int> {
+fun findPosition(c: Char, area: List<List<Char>>): Pair<Int, Int> {
     var x = 0
     var y = 0
     while (y < area.size) {
@@ -69,3 +69,19 @@ fun findPosition(c: Char, area: MutableList<MutableList<Char>>): Pair<Int, Int> 
     }
     return x to y
 }
+
+fun readCharMatrixInput(input: List<String>) : MutableList<MutableList<Char>> {
+    val area = mutableListOf<MutableList<Char>>()
+    input.forEach {
+        area.add(it.toMutableList())
+    }
+    return area
+}
+
+// Everything after this is in red
+val red = "\u001b[31m"
+
+// Resets previous color codes
+val reset = "\u001b[0m"
+
+val bold = "\u001B[1m";

@@ -1,11 +1,4 @@
 fun main() {
-    // Everything after this is in red
-    val red = "\u001b[31m"
-
-    // Resets previous color codes
-    val reset = "\u001b[0m"
-
-    val bold = "\u001B[1m";
 
     fun part1(input: List<String>): Int {
         val area = mutableListOf<MutableList<Char>>()
