@@ -2,35 +2,39 @@ fun main() {
     val directions = arrayOf(0 to 1, 0 to -1, 1 to 0, -1 to 0)
     fun findMoves(pos: Pair<Int, Int>, area: List<List<Char>>, print : Boolean = false) : List<Pair<Int, Int>> {
         val moves = mutableListOf<Pair<Int, Int>>()
-        try {
             directions.forEach {
-//                println("Searching for move from $pos in direction $it")
-                val p = pos.plus(it)
-                if (area[p.second][p.first] in arrayOf('.', 'E')) {
-                    if (print) {
-                        println("Searching for move from $pos in direction $it > added")
+                try {
+//                    println("Searching for move from $pos in direction $it")
+                    val p = pos.plus(it)
+                    if (area[p.second][p.first] in arrayOf('.', 'E')) {
+                        if (print) {
+                            println("Searching for move from $pos in direction $it > added")
+                        }
+                        moves.add(p)
                     }
-                    moves.add(p)
+                } catch (e: java.lang.IndexOutOfBoundsException) {
+                    // out of racetrack
                 }
             }
-        } catch (e: java.lang.IndexOutOfBoundsException) {
-            // out of racetrack
-        }
         return moves.toList()
     }
 
     fun findCheats(pos: Pair<Int, Int>, area: List<List<Char>>) : List<Pair<Int, Int>> {
         val chaets = mutableListOf<Pair<Int, Int>>()
-        try {
-            directions.forEach {
+        directions.forEach {
+            try {
+                println("Trying $pos in direction $it to checklist")
                 val p = pos.plus(it)
                 val pp = p.plus(it)
                 if (area[p.second][p.first] == '#' && area[pp.second][pp.first] in arrayOf('.', 'E')) {
                     chaets.add(p)
+                    println("Adding cheat $pos -> $p to cheatlist")
+                } else {
+                    println("Not adding cheat $pos -> $p to cheatlist")
                 }
+            } catch (e: java.lang.IndexOutOfBoundsException) {
+                println("Not adding cheat $pos -> ?? to cheatlist -> out of bounds")
             }
-        } catch (e: java.lang.IndexOutOfBoundsException) {
-            // out of racetrack
         }
         return chaets.toList()
     }
@@ -98,7 +102,8 @@ fun main() {
                     } else {
                         println("Not adding cheat $it -> $move")
                     }
-                    readLine()
+//                    val ble = readLine()
+//                    println(ble)
                 }
             }
             val moves = findMoves(pos, area)
@@ -108,7 +113,7 @@ fun main() {
             pos = moves.first()
             finish = area[pos.second][pos.first] == 'E'
             area[pos.second][pos.first] = 'X'
-            printCharMatrix(area)
+//            printCharMatrix(area)
 //            Thread.sleep(200)
             length++
         } while (!finish)
