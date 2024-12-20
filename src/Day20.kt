@@ -88,14 +88,20 @@ fun main() {
                 val a = area.map { it.toMutableList() }
                 a[it.second][it.first] = 'x'
                 val p = it.plus(it.minus(pos))
+                if (a[p.second][p.first] == 'E') {
+                    cheats.add(Triple(it.first, it.second, length + 2))
+                }
                 a[p.second][p.first] = 'x'
                 val m = findMoves(p, a, true)
                 m.forEach {move ->
                     println("Checking move: $move for cheat: $it")
                     val r = a.map { it.toMutableList() }.toMutableList()
+                    if (r[move.second][move.first] == 'E') {
+                        cheats.add(Triple(it.first, it.second, length + 3))
+                    }
                     r[move.second][move.first] = '*'
                     val l = trackLength(move, r, length + 3)
-                    printCharMatrix(r)
+//                    printCharMatrix(r)
                     if (l > 0) {
                         println("Adding cheat $it -> $move with length $l (saves ${trackLength-l})")
                         cheats.add(Triple(it.first, it.second, l))
@@ -122,7 +128,7 @@ fun main() {
         cheats.forEach {
             println("${trackLength-it.third}")
         }
-        return cheats.count {it.third >= threshold}
+        return cheats.count {trackLength-it.third >= threshold}
     }
 
     fun part2(input: List<String>): Int {
@@ -135,9 +141,10 @@ fun main() {
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day20_test")
     check(part1(testInput, 0) == 44)
+    check(part1(testInput, 13) == 5)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day20")
-//    part1(input, 100).println()
+    part1(input, 100).println()
 //    part2(input).println()
 }
